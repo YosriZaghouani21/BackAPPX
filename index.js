@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const connectDB = require("./config/dbConnect");
 const userRoutes = require("./routes/user.js");
+const projectRoutes = require("./routes/projectroutes.js");
 
 //Basic Configuration
 const app = express();
@@ -14,6 +15,7 @@ app.use(cors());
 
 //Routes path
 app.use("/user", userRoutes);
+app.use("/project",projectRoutes );
 
 //MongoDB setup
 connectDB();
