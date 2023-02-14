@@ -1,10 +1,13 @@
 const Project = require("../models/projectModel.js");
 const config = require("config");
+const { concat } = require("lodash");
 
 // create project 
 exports.createProject = async (req, res) => {
-  const { name, reference, description } = req.body;
-
+  const { name, description } = req.body;
+  var crypto = require('crypto');
+  var reference = crypto.randomBytes(30).toString('hex');
+  console.log(reference.length);
   try {
     const newProject = new Project({
       name,
