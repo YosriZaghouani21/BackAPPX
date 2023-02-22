@@ -29,10 +29,10 @@ const userSchema = mongoose.Schema({
       ref: "project",
     },
   ],
-  /*  resetLink: {
+  resetLink: {
     data: String,
     default: "",
-  },*/
+  },
 });
 
 module.exports = User = mongoose.model("user", userSchema);
