@@ -10,6 +10,7 @@ const {
   deleteUser,
   allUsers,
   getSingleUser,
+  addMyProject,
 } = require("../controllers/user.js");
 //const isAuth = require("../middleware/passport-setup.js");
 
@@ -25,5 +26,6 @@ Router.get("/current", isAuth(), (req, res) => {
   console.log("req", req);
   res.json(req.user);
 });
+Router.put("/myProject/:id", addMyProject);
 
 module.exports = Router;

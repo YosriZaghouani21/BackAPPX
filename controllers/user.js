@@ -3,8 +3,10 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const config = require("config");
 const secretOrkey = config.get("secretOrkey");
+
 //Password Crypt
 const bcrypt = require("bcryptjs");
+const projectModel = require("../models/projectModel.js");
 
 // Register User
 exports.register = async (req, res) => {
@@ -126,5 +128,28 @@ exports.getSingleUser = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
+  }
+};
+
+//Add Project to a User
+exports.addMyProject = async (req, res) => {
+  const userId = req.params.id;
+  const { ProjectId } = req.body;
+  console.log("🚀  ProjectId", ProjectId);
+
+  try {
+    const searchedUser = await User.findOne({ _id: userId });
+    console.log(searchedUser);
+    searchedUser.myProject.push(ProjectId);
+    const user = await User.findByIdAndUpdate(userId, searchedUser, {
+      strictPopulate: false,
+      new: true,
+      useFindAndModify: false,
+    }).populate({ path: "myProject", model: Project });
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ errors: error.message });
   }
 };

@@ -23,6 +23,12 @@ const userSchema = mongoose.Schema({
     type: String,
     default: "",
   },
+  myProject: [
+    {
+      type: ObjectId,
+      ref: "project",
+    },
+  ],
   /*  resetLink: {
     data: String,
     default: "",
