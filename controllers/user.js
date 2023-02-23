@@ -234,4 +234,23 @@ exports.forgotPassword = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
+
+};
+exports.userData = async (req, res) => {
+  const { token } = req.body;
+if (token !== null ){
+  const user = jwt.verify(token, secretOrkey);
+  const useremail = user.email;
+  User.findOne({ email: useremail })
+    .then((data) => {
+      res.send({ status: "ok", data: data });
+    })
+    .catch((error) => {
+      res.send({ status: "error", data: error });
+    });
+}else{
+  console.log("not logged in");
+}
+
+
 };
