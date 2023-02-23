@@ -26,45 +26,66 @@ exports.createClient = async (req, res) => {
 
 
 // Update project
-//exports.updateProject = async (req, res) => {
-//    Project.findByIdAndUpdate(req.params.id,req.body)
-//           .then(doc2 => {
-//            res.status(200).json(doc2)
-//        })
-//        .catch(err => {
-//            res.status(500).json({error : err})
-//        })
-//
-//
-//};
-//
-//// Get all projects
-//exports.allProjects = async (req, res) => {
-//    Project.find({})
-//    .then(docs =>{
-//    res.status(200).json(docs)
-//   })
-//   .catch(err => {
-//    res.status(500).json({error:err})
-//   }) 
-//};
-////Delete a project
-//exports.deleteProject = async (req, res) => {
-//  try {
-//    await Project.findByIdAndDelete(req.params.id);
-//    res.json({ msg: "projet supprimé avec succès" });
-//  } catch (err) {
-//    return res.status(500).json({ msg: err.message });
-//  }
-//};
-//
-////Get User with id
-//exports.getSingleProject = async (req, res) => {
-//  try {
-//    const user = await Project.findById(req.params.id);
-//    res.status(200).json({user});
-//  } catch (err) {
-//    return res.status(500).json({ msg: err.message });
-//  }
-//};
-//
+exports.updateClient = async (req, res) => {
+  try {
+    const { name, familyName, email,phoneNumber,password,reference,image } = req.body;
+
+    const updatedClient = await Client.findByIdAndUpdate(req.params.id, {
+      name,
+       familyName,
+       email,
+       phoneNumber,
+       password,
+       reference,
+       image
+    });
+
+    return res.status(201).json({
+      msg: "Le client a été modifié avec succès",
+      user: updatedClient,
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+
+};
+
+// Get all clients
+exports.allClients = async (req, res) => {
+    Client.find({})
+    .then(docs =>{
+    res.status(200).json(docs)
+   })
+   .catch(err => {
+    res.status(500).json({error:err})
+   }) 
+};
+
+exports.allClientsByProjectReference = async (req, res) => {
+    Client.find({"reference":req.params.reference})
+    .then(doc => {
+        res.status(200).json(doc)
+    })
+    .catch(err => {
+        res.status(500).json({error : err})
+    })
+};
+//Delete a client 
+exports.deleteClient = async (req, res) => {
+  try {
+    await Client.findByIdAndDelete(req.params.id);
+    res.json({ msg: "client supprimé avec succès" });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
+
+//Get Client with id
+exports.getSingleClient = async (req, res) => {
+  try {
+    const client = await Client.findById(req.params.id);
+    res.status(200).json({client});
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
