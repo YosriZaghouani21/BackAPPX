@@ -7,13 +7,13 @@ const userSchema = mongoose.Schema({
   email: String,
   phoneNumber: Number,
   password: String,
-  /*  image: {
-    public_id: { type: String },
-    url: { type: String },
-  },*/
   createdAt: {
     type: Date,
     default: new Date(),
+  },
+  image: {
+    public_id: { type: String },
+    url: { type: String },
   },
   Role: {
     type: String,
@@ -23,10 +23,16 @@ const userSchema = mongoose.Schema({
     type: String,
     default: "",
   },
-  /*  resetLink: {
+  myProject: [
+    {
+      type: ObjectId,
+      ref: "project",
+    },
+  ],
+  resetLink: {
     data: String,
     default: "",
-  },*/
+  },
 });
 
 module.exports = User = mongoose.model("user", userSchema);
