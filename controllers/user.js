@@ -7,6 +7,9 @@ const nodemailer = require("nodemailer");
 const RESET_PWD_KEY = config.get("RESET_PWD_KEY");
 const Client_URL = config.get("Client_URL");
 
+//Upload Image
+const cloudinary = require("../uploads/cloudinary");
+
 //Password Crypt
 const bcrypt = require("bcryptjs");
 const projectModel = require("../models/projectModel.js");
@@ -213,7 +216,7 @@ exports.forgotPassword = async (req, res) => {
     });
 
     let info = await transporter.sendMail({
-      from: '"Node mailer contact" <zaghouani.yosri@gmail.com>',
+      from: "noreplybackappX@backapp.com",
       to: email,
       subject: "Hello ✔",
       text: "Account Activation link",
@@ -230,27 +233,78 @@ exports.forgotPassword = async (req, res) => {
 
     return res.status(200).json({
       message: "Email has been sent, kindly activate your account",
+      token,
     });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
-
 };
+
+exports.resetPassword = async (req, res) => {
+  const { resetLink, newPass } = req.body;
+  if (resetLink && typeof resetLink === "string") {
+    jwt.verify(resetLink, RESET_PWD_KEY, function (err, decodedData) {
+      if (err) {
+        return res.status(401).json({ err: "Incorrect token/expired" });
+      }
+      User.findOne({ resetLink }, async (err, user) => {
+        if (err || !user) {
+          return res
+            .status(400)
+            .json({ error: "User with this token does not exist" });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(newPass, salt);
+        user.password = hash;
+        user.resetLink = "";
+
+        user.save((err, result) => {
+          if (err) {
+            return res.status(400).json({ error: "reset password error" });
+          } else {
+            return res.status(200).json({
+              message: "Your password has been changed",
+            });
+          }
+        });
+      });
+    });
+  } else {
+    return res.status(401).json({ error: "Invalid or missing reset link" });
+  }
+};
+
 exports.userData = async (req, res) => {
   const { token } = req.body;
-if (token !== null ){
-  const user = jwt.verify(token, secretOrkey);
-  const useremail = user.email;
-  User.findOne({ email: useremail })
-    .then((data) => {
-      res.send({ status: "ok", data: data });
-    })
-    .catch((error) => {
-      res.send({ status: "error", data: error });
+  if (token !== null) {
+    const user = jwt.verify(token, secretOrkey);
+    const useremail = user.email;
+    User.findOne({ email: useremail })
+      .then((data) => {
+        res.send({ status: "ok", data: data });
+      })
+      .catch((error) => {
+        res.send({ status: "error", data: error });
+      });
+  } else {
+    console.log("not logged in");
+  }
+};
+
+//upload to user
+exports.uploadphoto = async (req, res) => {
+  try {
+    const image = await cloudinary.v2.uploader.upload(req.file.path);
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+      image,
     });
-}else{
-  console.log("not logged in");
-}
-
-
+    res.json({
+      success: true,
+      file: image.secure_url,
+      user: updatedUser,
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
 };
