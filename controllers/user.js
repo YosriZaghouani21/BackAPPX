@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
         .status(401)
         .json({ msg: `Utilisateur existant , utiliser un autre E-mail` });
 
-    // create reusable transporter object using the default SMTP transport
+/*     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
@@ -50,7 +50,7 @@ exports.register = async (req, res) => {
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 
-    console.log("email has been sent");
+    console.log("email has been sent"); */
 
     const newUser = new User({
       name,
@@ -64,7 +64,7 @@ exports.register = async (req, res) => {
     newUser.password = hash;
 
     await newUser.save();
-    res.status(201).json(newUser);
+    res.status(201).json({status:"created", newUser});
   } catch (error) {
     res.status(500).json({ errors: error });
   }
@@ -90,7 +90,7 @@ exports.login = async (req, res) => {
     };
 
     const token = await jwt.sign(payload, secretOrkey);
-    return res.status(200).json({ token: `Bearer ${token}`, user });
+    return res.status(200).json({ status:"ok",token:token, user });
   } catch (error) {
     res.status(500).json({ errors: error });
   }
@@ -122,6 +122,7 @@ exports.updateUser = async (req, res) => {
     });
 
     return res.status(201).json({
+      status:"updated",
       msg: "L'utilisateur a été modifié avec succès",
       user: updatedUser,
     });
@@ -145,7 +146,7 @@ exports.allUsers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
-    res.json({ msg: "utilisateur supprimé avec succès" });
+    res.json({status:"deleted", msg: "utilisateur supprimé avec succès" });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
