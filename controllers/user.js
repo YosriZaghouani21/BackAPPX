@@ -330,6 +330,7 @@ exports.uploadphoto = async (req, res) => {
       image,
     });
     res.json({
+      status:"ok",
       success: true,
       file: image.secure_url,
       user: updatedUser,
