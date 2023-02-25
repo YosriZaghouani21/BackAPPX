@@ -6,6 +6,9 @@ const connectDB = require("./config/dbConnect");
 const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
+//Upload Image
+const cloudinary = require("./uploads/cloudinary");
+const uploader = require("./uploads/multer");
 
 //Basic Configuration
 const app = express();
@@ -18,6 +21,14 @@ app.use(cors());
 app.use("/user", userRoutes);
 app.use("/project",projectRoutes );
 app.use("/client",clientRoutes );
+
+app.post("/upload", uploader.single("image"), async (req, res) => {
+  const upload = await cloudinary.v2.uploader.upload(req.file.path);
+  return res.json({
+    success: true,
+    file: upload.secure_url,
+  });
+});
 
 //MongoDB setup
 connectDB();

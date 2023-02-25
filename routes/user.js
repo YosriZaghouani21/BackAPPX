@@ -13,8 +13,12 @@ const {
   getSingleUser,
   addMyProject,
   forgotPassword,
+  resetPassword,
+  uploadphoto,
 } = require("../controllers/user.js");
-//const isAuth = require("../middleware/passport-setup.js");
+//Upload Image
+const cloudinary = require("../uploads/cloudinary");
+const uploader = require("../uploads/multer");
 
 const Router = express.Router();
 
@@ -24,6 +28,8 @@ Router.put("/profile/:id", updateUser);
 Router.delete("/delete/:id", deleteUser);
 Router.put("/forgot-password", forgotPassword);
 Router.post("/userData", userData);
+Router.put("/reset-password", resetPassword);
+
 Router.get("/users", allUsers);
 Router.get("/user/:id", getSingleUser);
 Router.get("/current", isAuth(), (req, res) => {
@@ -31,5 +37,7 @@ Router.get("/current", isAuth(), (req, res) => {
   res.json(req.user);
 });
 Router.put("/myProject/:id", addMyProject);
+Router.put("/uploadphoto/:id", uploader.single("image"), uploadphoto);
+
 
 module.exports = Router;

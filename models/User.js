@@ -7,13 +7,13 @@ const userSchema = mongoose.Schema({
   email: String,
   phoneNumber: Number,
   password: String,
-  /*  image: {
-    public_id: { type: String },
-    url: { type: String },
-  },*/
   createdAt: {
     type: Date,
     default: new Date(),
+  },
+  image: {
+    public_id: { type: String },
+    url: { type: String },
   },
   Role: {
     type: String,
