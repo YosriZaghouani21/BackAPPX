@@ -2,17 +2,17 @@ const Project = require("../models/projectModel.js");
 const config = require("config");
 const { concat } = require("lodash");
 
-// create project 
+// create project
 exports.createProject = async (req, res) => {
   const { name, description } = req.body;
-  var crypto = require('crypto');
-  var reference = crypto.randomBytes(30).toString('hex');
+  var crypto = require("crypto");
+  var reference = crypto.randomBytes(30).toString("hex");
   console.log(reference.length);
   try {
     const newProject = new Project({
       name,
       reference,
-      description
+      description,
     });
 
     await newProject.save();
@@ -22,31 +22,28 @@ exports.createProject = async (req, res) => {
   }
 };
 
-
-
 // Update project
 exports.updateProject = async (req, res) => {
-    Project.findByIdAndUpdate(req.params.id,req.body)
-           .then(doc2 => {
-            res.status(200).json(doc2)
-        })
-        .catch(err => {
-            res.status(500).json({error : err})
-        })
-
-
+  Project.findByIdAndUpdate(req.params.id, req.body)
+    .then((doc2) => {
+      res.status(200).json(doc2);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err });
+    });
 };
 
 // Get all projects
 exports.allProjects = async (req, res) => {
-    Project.find({})
-    .then(docs =>{
-    res.status(200).json(docs)
-   })
-   .catch(err => {
-    res.status(500).json({error:err})
-   }) 
+  Project.find({})
+    .then((docs) => {
+      res.status(200).json(docs);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err });
+    });
 };
+
 //Delete a project
 exports.deleteProject = async (req, res) => {
   try {
@@ -57,11 +54,11 @@ exports.deleteProject = async (req, res) => {
   }
 };
 
-//Get User with id
+//Get Project with id
 exports.getSingleProject = async (req, res) => {
   try {
-    const user = await Project.findById(req.params.id);
-    res.status(200).json({user});
+    const project = await Project.findById(req.params.id);
+    res.status(200).json({ project });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }

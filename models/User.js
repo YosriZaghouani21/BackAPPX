@@ -23,10 +23,16 @@ const userSchema = mongoose.Schema({
     type: String,
     default: "",
   },
-  /*  resetLink: {
+  myProject: [
+    {
+      type: ObjectId,
+      ref: "project",
+    },
+  ],
+  resetLink: {
     data: String,
     default: "",
-  },*/
+  },
 });
 
 module.exports = User = mongoose.model("user", userSchema);

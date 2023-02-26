@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema.Types;
 mongoose.set("strictQuery", false);
 
 const projectSchema = mongoose.Schema({

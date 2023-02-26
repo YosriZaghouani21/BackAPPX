@@ -10,6 +10,8 @@ const {
   deleteUser,
   allUsers,
   getSingleUser,
+  addMyProject,
+  forgotPassword,
 } = require("../controllers/user.js");
 //const isAuth = require("../middleware/passport-setup.js");
 
@@ -19,11 +21,14 @@ Router.post("/register", registerRules(), validator, register);
 Router.post("/login", login, authorizeRoles);
 Router.put("/profile/:id", updateUser);
 Router.delete("/delete/:id", deleteUser);
+Router.put("/forgot-password", forgotPassword);
+
 Router.get("/users", allUsers);
 Router.get("/user/:id", getSingleUser);
 Router.get("/current", isAuth(), (req, res) => {
   console.log("req", req);
   res.json(req.user);
 });
+Router.put("/myProject/:id", addMyProject);
 
 module.exports = Router;
