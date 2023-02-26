@@ -93,7 +93,7 @@ exports.register = async (req, res) => {
     newUser.password = hash;
 
     await newUser.save();
-    res.status(201).json(newUser);
+    res.status(201).json({status:"created",newUser});
   } catch (error) {
     res.status(500).json({ errors: error });
   }
@@ -106,16 +106,17 @@ exports.login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user)
-      return res.status(404).json({ msg: `Email ou mot de passe incorrect` });
+      return res.status(404).json({status:"email not found", msg: `Email ou mot de passe incorrect` });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(401).json({ msg: `Email ou mot de passe incorrect` });
+      return res.status(401).json({ status:"password not found", msg: `Email ou mot de passe incorrect` });
 
     const payload = {
       id: user._id,
       name: user.name,
       email: user.email,
       phoneNumber: user.phoneNumber,
+      imageUrl:user.image.url
     };
 
     const token = await jwt.sign(payload, secretOrkey);
@@ -210,7 +211,7 @@ exports.addMyProject = async (req, res) => {
       useFindAndModify: false,
     }).populate({ path: "myProject", model: Project });
 
-    return res.status(200).json(user);
+    return res.status(200).json({status:"ok",user});
   } catch (error) {
     console.log(error);
     res.status(500).json({ errors: error.message });
@@ -310,7 +311,7 @@ exports.userData = async (req, res) => {
 if (token !== null ){
   const user = jwt.verify(token, secretOrkey);
   const useremail = user.email;
-  User.findOne({ email: useremail })
+  User.findOne({ email: useremail }).populate({path: "myProject", model: Project})
     .then((data) => {
       res.send({ status: "ok", data: data });
     })
