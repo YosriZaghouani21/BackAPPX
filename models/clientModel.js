@@ -8,12 +8,16 @@ const clientSchema = mongoose.Schema({
   email:String,
   phoneNumber:Number,
   password:String,
-  image:String,
+  image: {
+    public_id: { type: String },
+    url: { type: String },
+  },
   reference: String,
   createdAt: {
     type: Date,
     default: new Date(),
   },
+
 });
 
 module.exports = Client = mongoose.model("client", clientSchema);

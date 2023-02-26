@@ -2,7 +2,7 @@ const Client = require("../models/clientModel.js");
 
 // create client
 exports.createClient = async (req, res) => {
-  const { name, familyName,email,phoneNumber,password,image,reference } = req.body;
+  const { name, familyName,email,phoneNumber,password,reference } = req.body;
   const fullName = name +" "+familyName;
   try {
     const newClient = new Client({
@@ -12,7 +12,6 @@ exports.createClient = async (req, res) => {
       email,
       phoneNumber,
       password,
-      image,
       reference
     });
 
@@ -89,3 +88,21 @@ exports.getSingleClient = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
+
+
+exports.uploadPhotoToClient = async (req, res) => {
+  try {
+    const image = await cloudinary.v2.uploader.upload(req.file.path);
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+      image,
+    });
+    res.json({
+      success: true,
+      file: image.secure_url,
+      user: updatedUser,
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
+
