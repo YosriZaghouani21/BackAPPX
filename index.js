@@ -1,4 +1,4 @@
-const express = require("express");
+ const express = require("express");
 
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -8,6 +8,7 @@ const userRoutes = require("./routes/user.js");
 const paymentRoutes = require("./routes/payment.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
+const stripeRoutes = require("./routes/stripe");
 //Upload Image
 const cloudinary = require("./uploads/cloudinary");
 const uploader = require("./uploads/multer");
@@ -25,8 +26,8 @@ app.set("view engine", "ejs");
 //Routes path
 app.use("/user", userRoutes);
 
-app.use("/payment", paymentRoutes);
 
+app.use("/payment", stripeRoutes);
 app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
 app.post("/upload", uploader.single("image"), async (req, res) => {

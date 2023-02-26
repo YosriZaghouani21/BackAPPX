@@ -3,11 +3,12 @@ const { ObjectId } = mongoose.Schema.Types;
 mongoose.set("strictQuery", false);
 
 const paymentSchema = mongoose.Schema({
-    user: {
+    userId: {
         type: ObjectId,
     },
-    amount: {
-        type: Number,
+
+    subscriptionId: {
+        type: String,
     },
     status: {
         type: String,
