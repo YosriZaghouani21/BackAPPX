@@ -30,6 +30,14 @@ app.post("/upload", uploader.single("image"), async (req, res) => {
   });
 });
 
+app.post("/upload", uploader.single("image"), async (req, res) => {
+  const upload = await cloudinary.v2.uploader.upload(req.file.path);
+  return res.json({
+    success: true,
+    file: upload.secure_url,
+  });
+});
+
 //MongoDB setup
 connectDB();
 const PORT = process.env.PORT || 9092;

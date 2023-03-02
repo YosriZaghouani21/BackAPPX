@@ -9,6 +9,7 @@ const {
   updateUser,
   deleteUser,
   allUsers,
+  userData,
   getSingleUser,
   addMyProject,
   forgotPassword,
@@ -26,9 +27,10 @@ Router.post("/login", login, authorizeRoles);
 Router.put("/profile/:id", updateUser);
 Router.delete("/delete/:id", deleteUser);
 Router.put("/forgot-password", forgotPassword);
+
+Router.post("/userData", userData);
 Router.put("/reset-password", resetPassword);
 
-//Router.post("/userData", userData);
 Router.get("/users", allUsers);
 Router.get("/user/:id", getSingleUser);
 Router.get("/current", isAuth(), (req, res) => {
