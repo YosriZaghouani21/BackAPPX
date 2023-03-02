@@ -19,8 +19,16 @@ app.use(cors());
 
 //Routes path
 app.use("/user", userRoutes);
-app.use("/project",projectRoutes );
-app.use("/client",clientRoutes );
+app.use("/project", projectRoutes);
+app.use("/client", clientRoutes);
+
+app.post("/upload", uploader.single("image"), async (req, res) => {
+  const upload = await cloudinary.v2.uploader.upload(req.file.path);
+  return res.json({
+    success: true,
+    file: upload.secure_url,
+  });
+});
 
 app.post("/upload", uploader.single("image"), async (req, res) => {
   const upload = await cloudinary.v2.uploader.upload(req.file.path);
