@@ -13,7 +13,7 @@ const bcrypt = require("bcryptjs");
 const projectModel = require("../models/projectModel.js");
 
 // Register User
-/* exports.register = async (req, res) => {
+exports.register = async (req, res) => {
   const { name, email, phoneNumber, password } = req.body;
 
   try {
@@ -21,7 +21,7 @@ const projectModel = require("../models/projectModel.js");
     if (searchRes)
       return res
         .status(401)
-        .json({ msg: `Utilisateur existant , utiliser un autre E-mail` });
+        .json({status:"failed", msg: `Utilisateur existant , utiliser un autre E-mail` });
 
     const newUser = new User({
       name,
@@ -39,9 +39,9 @@ const projectModel = require("../models/projectModel.js");
   } catch (error) {
     res.status(500).json({ errors: error });
   }
-}; */
+};
 
-exports.register = async (req, res) => {
+/* exports.register = async (req, res) => {
   const { name, email, phoneNumber, password } = req.body;
 
   try {
@@ -49,7 +49,7 @@ exports.register = async (req, res) => {
     if (searchRes)
       return res
         .status(401)
-        .json({ msg: `Utilisateur existant , utiliser un autre E-mail` });
+        .json({status:"failed", msg: `Utilisateur existant , utiliser un autre E-mail` });
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
@@ -97,7 +97,7 @@ exports.register = async (req, res) => {
   } catch (error) {
     res.status(500).json({ errors: error });
   }
-};
+}; */
 
 // Login User
 
