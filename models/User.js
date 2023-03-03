@@ -35,8 +35,10 @@ const userSchema = mongoose.Schema({
   },
   startedAt: {
     type: Date,
+    default: new Date(),
   },
   endedAt: {type: Date,
+    default: new Date().setMonth( new Date().getMonth() + 12)
   },
   subscription: {type: String, default: "Free",}
 });

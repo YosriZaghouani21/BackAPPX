@@ -6,6 +6,7 @@ const secretOrkey = config.get("secretOrkey");
 const nodemailer = require("nodemailer");
 const RESET_PWD_KEY = config.get("RESET_PWD_KEY");
 const Client_URL = config.get("Client_URL");
+const todaysDate = new Date();
 
 //Upload Image
 const cloudinary = require("../uploads/cloudinary");
@@ -84,6 +85,10 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(401).json({ msg: `Email ou mot de passe incorrect` });
+    if (isSubValid(user)){
+        return res.status(401).json({ msg: `Votre abonnement a expiré` });
+    }
+
 
     const payload = {
       id: user._id,
@@ -346,3 +351,13 @@ exports.blockUser = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 }
+// validate user subscription
+ function isSubValid (user){
+    const today = new Date();
+    if ((user.subscription === "Premium" && today < user.endedAt) || (user.subscription === "Free" && today < user.endedAt) ) {
+        return true;
+    } else {
+        return false;
+    }
+
+ }

@@ -16,7 +16,6 @@ router.get("/config", async (req, res) => {
 
     });
 });
-// 7 days before the invoice is due, send an email to the customer with the invoice details
 
 router.post("/create-payment-intent", async (req, res) => {
     const { items,email } = req.body;
@@ -29,7 +28,7 @@ router.post("/create-payment-intent", async (req, res) => {
         res.send({
             clientSecret: paymentIntent.client_secret,
         });
-        userController.updateUserSubscription(req,res)
+        // userController.updateUserSubscription(req,res)
     });
 });
 
