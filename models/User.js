@@ -33,6 +33,12 @@ const userSchema = mongoose.Schema({
     data: String,
     default: "",
   },
+  startedAt: {
+    type: Date,
+  },
+  endedAt: {type: Date,
+  },
+  subscription: {type: String, default: "Free",}
 });
 
 module.exports = User = mongoose.model("user", userSchema);

@@ -308,3 +308,41 @@ exports.uploadphoto = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
+
+
+
+// update user subscription
+exports.updateUserSubscription = async (req, res) => {
+  const today = new Date();
+  try {
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+        subscription: "premium",
+        startedAt:  today,
+        endedAt: today.setMonth(today.getMonth() + 1),
+    });
+
+    return res.status(201).json({
+      msg: "subscription updated",
+      user: updatedUser,
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
+
+// block user
+exports.blockUser = async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+      subscription: "blocked",
+    });
+
+    return res.status(201).json({
+      msg: "user blocked",
+      user: updatedUser,
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+}

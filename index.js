@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const connectDB = require("./config/dbConnect");
 const userRoutes = require("./routes/user.js");
-const paymentRoutes = require("./routes/payment.js");
+const paymentRoutes = require("./routes/stripe");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
 const stripeRoutes = require("./routes/stripe");
@@ -15,7 +15,7 @@ const uploader = require("./uploads/multer");
 
 //Basic Configuration
 const app = express();
-
+connectDB();
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
@@ -37,6 +37,7 @@ app.post("/upload", uploader.single("image"), async (req, res) => {
     file: upload.secure_url,
   });
 });
+
 
 
 //MongoDB setup

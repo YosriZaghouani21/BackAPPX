@@ -4,7 +4,7 @@ mongoose.set("strictQuery", false);
 
 const paymentSchema = mongoose.Schema({
     userId: {
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId, ref: 'user'
     },
 
     subscriptionId: {
