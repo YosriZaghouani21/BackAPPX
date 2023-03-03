@@ -5,7 +5,6 @@ const moment = require("moment");
 const User = require("../models/User");
 const userController = require("../controllers/user");
 const paymentController = require("../controllers/payment");
-const userController = require("../controllers/user");
 
 const stripe = require('stripe')('sk_test_51Mb8mPF6RxBlwxAltBxdaTECgvWoYUWwLJvK82CMWWm7yB6bGC12GfqYZnhPcK8AMKtiqNtTdUb5LIlQzcGlmAij00zTqqwbov')
 
@@ -30,7 +29,7 @@ router.post("/create-payment-intent", async (req, res) => {
         res.send({
             clientSecret: paymentIntent.client_secret,
         });
-        userController.updateUser(req, res)
+        userController.updateUserSubscription(req,res)
     });
 });
 

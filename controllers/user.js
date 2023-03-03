@@ -309,7 +309,7 @@ exports.uploadphoto = async (req, res) => {
   }
 };
 
-
+//*************************************** User Subscription Methods ***************************************//
 
 // update user subscription
 exports.updateUserSubscription = async (req, res) => {

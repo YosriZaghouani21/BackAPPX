@@ -5,10 +5,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const connectDB = require("./config/dbConnect");
 const userRoutes = require("./routes/user.js");
-const paymentRoutes = require("./routes/stripe");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
 const stripeRoutes = require("./routes/stripe");
+
 //Upload Image
 const cloudinary = require("./uploads/cloudinary");
 const uploader = require("./uploads/multer");
