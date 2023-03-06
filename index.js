@@ -8,11 +8,14 @@ const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
 const stripeRoutes = require("./routes/stripe");
+const mailingService = require("./utils/mailingScheduler");
 
 //Upload Image
 const cloudinary = require("./uploads/cloudinary");
 const uploader = require("./uploads/multer");
 
+//Mailing Service job
+mailingService
 //Basic Configuration
 const app = express();
 connectDB();

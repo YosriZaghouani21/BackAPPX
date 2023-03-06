@@ -18,7 +18,9 @@ router.get("/config", async (req, res) => {
 });
 
 router.post("/create-payment-intent", async (req, res) => {
-    const { items,email } = req.body;
+    const { items, email } = req.body;
+    const user =  User.findOne(email);
+    console.log('email= '+ email)
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripe.paymentIntents.create({
         amount: 4000,
@@ -28,9 +30,14 @@ router.post("/create-payment-intent", async (req, res) => {
         res.send({
             clientSecret: paymentIntent.client_secret,
         });
-        // userController.updateUserSubscription(req,res)
+        // update user subscription on server
+         userController.updateUserSubscription(email)
+         
+        // send email to user after payment
+        paymentController.sendEmailAfterPayment(email)
     });
 });
+
 
 
 

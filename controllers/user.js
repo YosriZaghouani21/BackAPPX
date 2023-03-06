@@ -85,9 +85,12 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(401).json({ msg: `Email ou mot de passe incorrect` });
-    if (isSubValid(user)){
-        return res.status(401).json({ msg: `Votre abonnement a expiré` });
-    }
+    if (!isSubValid(user))
+      return res.status(401).json({ msg: `Votre abonnement a expiré` });
+
+
+
+
 
 
     const payload = {
@@ -314,49 +317,51 @@ exports.uploadphoto = async (req, res) => {
   }
 };
 
+
+
+
+/************************************************************************************************************/
 //*************************************** User Subscription Methods ***************************************//
+/************************************************************************************************************/
+
+
 
 // update user subscription
-exports.updateUserSubscription = async (req, res) => {
-  const today = new Date();
+exports.updateUserSubscription = async (email) => {
+  
   try {
-
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
-        subscription: "premium",
-        startedAt:  today,
-        endedAt: today.setMonth(today.getMonth() + 1),
+    return  await User.findOneAndUpdate(email, {
+        subscription: "Premium",
+        startedAt: new Date(),
+        endedAt: new Date().setMonth( new Date().getMonth() + 1)
     });
-
-    return res.status(201).json({
-      msg: "subscription updated",
-      user: updatedUser,
-    });
-  } catch (err) {
-    return res.status(500).json({ msg: err.message });
   }
+    catch (err) {
+    console.log(err);
+    }
 };
 
 // block user
-exports.blockUser = async (req, res) => {
+exports.blockUser = async (email) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+    const updatedUser = await User.findOneAndUpdate(email, {
       subscription: "blocked",
     });
-
-    return res.status(201).json({
-      msg: "user blocked",
-      user: updatedUser,
-    });
+    console.log("updatedUser");
+    return updatedUser;
   } catch (err) {
-    return res.status(500).json({ msg: err.message });
+    console.log(err);
   }
 }
+
+
 // validate user subscription
  function isSubValid (user){
-    const today = new Date();
-    if ((user.subscription === "Premium" && today < user.endedAt) || (user.subscription === "Free" && today < user.endedAt) ) {
+  ;
+    if ((user.subscription!=="Blocked") && (user.subscription!=="Premium" || new Date(user.endedAt) > new Date())) {
         return true;
     } else {
+        this.blockUser(user._id);
         return false;
     }
 
