@@ -18,6 +18,11 @@ const clientSchema = mongoose.Schema({
     default: new Date(),
   },
 
+  resetLink: {
+    data: String,
+    default: "",
+  },
+
 });
 
 module.exports = Client = mongoose.model("client", clientSchema);

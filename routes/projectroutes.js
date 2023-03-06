@@ -11,9 +11,10 @@ const {
 } = require("../controllers/projectController");
 //const isAuth = require("../middleware/passport-setup.js");
 
+const uploader = require("../uploads/multer");
 const Router = express.Router();
 
-Router.post("/project", createProject);
+Router.post("/project", uploader.single("image") ,createProject);
 Router.get("/project", allProjects);
 Router.delete("/project/:id", deleteProject);
 Router.get("/project/:id", getSingleProject);

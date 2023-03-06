@@ -1,18 +1,23 @@
 const Project = require("../models/projectModel.js");
 const config = require("config");
 const { concat } = require("lodash");
+const cloudinary = require("../uploads/cloudinary");
+
 
 // create project
 exports.createProject = async (req, res) => {
   const { name, description } = req.body;
+  const image = await cloudinary.v2.uploader.upload(req.file.path);
   var crypto = require("crypto");
+  
   var reference = crypto.randomBytes(30).toString("hex");
-  console.log(reference.length);
+  console.log(req.body.name);
   try {
     const newProject = new Project({
       name,
       reference,
       description,
+      image
     });
 
     await newProject.save();
