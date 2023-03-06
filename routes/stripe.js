@@ -6,7 +6,7 @@ const User = require("../models/User");
 const userController = require("../controllers/user");
 const paymentController = require("../controllers/payment");
 
-const stripe = require('stripe')('sk_test_51Mb8mPF6RxBlwxAltBxdaTECgvWoYUWwLJvK82CMWWm7yB6bGC12GfqYZnhPcK8AMKtiqNtTdUb5LIlQzcGlmAij00zTqqwbov')
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 
 router.get("/config", async (req, res) => {
