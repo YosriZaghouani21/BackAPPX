@@ -8,6 +8,8 @@ const projectSchema = mongoose.Schema({
   reference: String,
 
   description: String,
+  
+  bgColor: String,
 
   createdAt: {
     type: Date,

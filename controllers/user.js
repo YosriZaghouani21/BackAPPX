@@ -226,7 +226,7 @@ exports.forgotPassword = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ error: "user with this email does not exist" });
+        .json({status:"email not found", error: "user with this email does not exist" });
     }
 
     const token = jwt.sign({ _id: user._id }, RESET_PWD_KEY, {
