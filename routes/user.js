@@ -27,6 +27,7 @@ Router.post("/login", login, authorizeRoles);
 Router.put("/profile/:id", updateUser);
 Router.delete("/delete/:id", deleteUser);
 Router.put("/forgot-password", forgotPassword);
+
 Router.post("/userData", userData);
 Router.put("/reset-password", resetPassword);
 
@@ -38,6 +39,5 @@ Router.get("/current", isAuth(), (req, res) => {
 });
 Router.put("/myProject/:id", addMyProject);
 Router.put("/uploadphoto/:id", uploader.single("image"), uploadphoto);
-
 
 module.exports = Router;

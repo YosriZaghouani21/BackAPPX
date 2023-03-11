@@ -8,6 +8,9 @@ const RESET_PWD_KEY = config.get("RESET_PWD_KEY");
 const Client_URL = config.get("Client_URL");
 const cloudinary = require("../uploads/cloudinary");
 
+//Upload Image
+const cloudinary = require("../uploads/cloudinary");
+
 //Password Crypt
 const bcrypt = require("bcryptjs");
 const projectModel = require("../models/projectModel.js");
@@ -294,6 +297,7 @@ exports.resetPassword = async (req, res) => {
             return res.status(400).json({ error: "reset password error" });
           } else {
             return res.status(200).json({
+
               status:"ok",
               message: "Your password has been changed",
             });
@@ -308,7 +312,8 @@ exports.resetPassword = async (req, res) => {
 
 exports.userData = async (req, res) => {
   const { token } = req.body;
-if (token !== null ){
+
+  if (token !== null ){
   const user = jwt.verify(token, secretOrkey);
   const useremail = user.email;
   User.findOne({ email: useremail }).populate({path: "myProject", model: Project})
@@ -321,6 +326,7 @@ if (token !== null ){
 }else{
   console.log("not logged in");
 }
+
 };
 
 //upload to user
