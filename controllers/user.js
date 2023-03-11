@@ -8,9 +8,6 @@ const RESET_PWD_KEY = config.get("RESET_PWD_KEY");
 const Client_URL = config.get("Client_URL");
 const cloudinary = require("../uploads/cloudinary");
 
-//Upload Image
-const cloudinary = require("../uploads/cloudinary");
-
 //Password Crypt
 const bcrypt = require("bcryptjs");
 const projectModel = require("../models/projectModel.js");
