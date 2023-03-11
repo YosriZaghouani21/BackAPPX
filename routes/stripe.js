@@ -1,7 +1,6 @@
 const express = require("express");
 require("dotenv").config();
 const router = express.Router();
-const moment = require("moment");
 const User = require("../models/User");
 const userController = require("../controllers/user");
 const paymentController = require("../controllers/payment");
@@ -34,9 +33,47 @@ router.post("/create-payment-intent", async (req, res) => {
          userController.updateUserSubscription(email)
          
         // send email to user after payment
-        paymentController.sendEmailAfterPayment(email)
+        paymentController.sendEmailConfirmationPayment(email)
     });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

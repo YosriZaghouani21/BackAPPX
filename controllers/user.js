@@ -328,9 +328,8 @@ exports.uploadphoto = async (req, res) => {
 
 // update user subscription
 exports.updateUserSubscription = async (email) => {
-  
   try {
-    return  await User.findOneAndUpdate(email, {
+    return await User.findOneAndUpdate(email, {
         subscription: "Premium",
         startedAt: new Date(),
         endedAt: new Date().setMonth( new Date().getMonth() + 1)
@@ -345,9 +344,9 @@ exports.updateUserSubscription = async (email) => {
 exports.blockUser = async (email) => {
   try {
     const updatedUser = await User.findOneAndUpdate(email, {
-      subscription: "blocked",
+      subscription: "Blocked",
     });
-    console.log("updatedUser");
+    console.log("Blocked User");
     return updatedUser;
   } catch (err) {
     console.log(err);

@@ -1,3 +1,13 @@
+//----------------------------------------------------------------------//
+//------------------------- Swagger Documentation ----------------------//
+//----------------------------------------------------------------------//
+
+
+
+
+
+
+
 const express = require("express");
 
 const { registerRules, validator } = require("../middlewares/validator.js");
@@ -40,8 +50,7 @@ Router.put("/myProject/:id", addMyProject);
 Router.put("/uploadphoto/:id", uploader.single("image"), uploadphoto);
 
 /*******************User Payment****************** */
-Router.post("/blockUser",blockUser );
+Router.put("/blockUser",blockUser );
 Router.put("/update-subscription", updateUserSubscription);
-
 
 module.exports = Router;
