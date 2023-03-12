@@ -12,8 +12,8 @@ const userSchema = mongoose.Schema({
     default: new Date(),
   },
   image: {
-    public_id: { type: String },
-    url: { type: String },
+    public_id: { type: String, default:"avatarPicture" },
+    url: { type: String,default:"https://www.gravatar.com/avatar/1234566?size=200&d=mm" },
   },
   Role: {
     type: String,
@@ -33,6 +33,11 @@ const userSchema = mongoose.Schema({
     data: String,
     default: "",
   },
+  lastLogin: {
+    type: Date,
+    default: null
+  },
+
   startedAt: {
     type: Date,
     default: new Date(),
