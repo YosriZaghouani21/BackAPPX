@@ -53,12 +53,16 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
-app.set("view engine", "ejs");
-
 
 //Routes path
 app.use("/user", userRoutes);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
+app.use("/api-docs", swaggerUi.serve,
+    swaggerUi.setup(specs,
+        { explorer: true,
+          customCssUrl:
+              "https://cdn.jsdelivr.net/npm/swagger-ui-themes@3.0.0/themes/3.x/theme-material.css",
+        })
+);
 app.use("/payment", stripeRoutes);
 app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);

@@ -37,6 +37,44 @@ router.post("/create-payment-intent", async (req, res) => {
     });
 });
 
+module.exports = router;
+
+
+//----------------------------------------------------------------------//
+//------------------------- Swagger Documentation ----------------------//
+//----------------------------------------------------------------------//
+
+/**
+ * @swagger
+ * tags:
+ *   name: Stripe
+ *   description: The Stripe management API
+ * /payment :
+ *   get:
+ *     summary: Retrieve stripe key
+ *     description: Retrieve stripe public key.
+ *     tags:
+ *       - Stripe
+ *     responses:
+ *       200:
+ *         description: get stripe public key from server.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *
+ *
+ *
+ *
+ *
+ * /payment/create-payment-intent:
+ *   post:
+ *     summary: Create payment intent
+ *     description: Create payment intent.
+ *     tags:
+ *       - Stripe
+ */
+
 
 
 

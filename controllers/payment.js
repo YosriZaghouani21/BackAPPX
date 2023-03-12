@@ -2,30 +2,6 @@ const express = require("express")
 const nodemailer = require("nodemailer")
 const User = require("../models/User");
 
-
-//-----------------------------------------------------------------------------------------------//
-//---------------------------------- Swagger Documentation -------------------------------------//
-//-----------------------------------------------------------------------------------------------//
-
-/**
- * @swagger
- * /payment:
- * post:
- *  description: Use to request payment
- *  tags:
- *    - Payment
- *    - Stripe
- * responses:
- * '200':
- * description: A successful response
- * content:
- * application/json:
- * '400':
- * description: Bad request
- */
-
-
-
 // sendEmail after payment
 exports.sendEmailConfirmationPayment = async (email) => {
     const invoiceDate = new Date().toLocaleDateString("en-US", {
@@ -3107,4 +3083,11 @@ exports.sendEmailAfterExpirationDate = async (email,name) => {
         }
     });
 }
+
+
+//-----------------------------------------------------------------------------------------------//
+//---------------------------------- Swagger Documentation -------------------------------------//
+//-----------------------------------------------------------------------------------------------//
+
+
 
