@@ -7,6 +7,7 @@ const connectDB = require("./config/dbConnect");
 const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
+const paymeeRoutes = require("./routes/paymee");
 const stripeRoutes = require("./routes/stripe");
 const mailingService = require("./utils/mailingScheduler");
 const swaggerUi = require("swagger-ui-express");
@@ -66,6 +67,7 @@ app.use("/api-docs", swaggerUi.serve,
 app.use("/payment", stripeRoutes);
 app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
+app.use("/paymee", paymeeRoutes);
 app.post("/upload", uploader.single("image"), async (req, res) => {
   const upload = await cloudinary.v2.uploader.upload(req.file.path);
   return res.json({

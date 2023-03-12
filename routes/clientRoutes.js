@@ -43,35 +43,35 @@ module.exports = Router;
  *       properties:
  *         id:
  *           type: string
- *           description: The auto-generated id of the user
+ *           description: The auto-generated id of the client
  *         name:
  *           type: string
- *           description: The name of the user
+ *           description: The name of the client
  *         familyName:
  *           type: string
- *           description: The user's family name
+ *           description: The client's family name
  *         fullName:
  *           type: string
- *           description: The user's full name
+ *           description: The client's full name
  *         email:
  *           type: string
- *           description: The user's email
+ *           description: The client's email
  *         phoneNumber:
  *           type: Number
- *           description: The user's phone number
+ *           description: The client's phone number
  *         password:
  *           type: string
- *           description: The user's password
+ *           description: The client's password
  *         createdAt:
  *           type: Date
- *           description: The user's creation date
+ *           description: The client's creation date
  *           default: new Date()
  *         image:
  *           type: string
- *           description: The user's image
+ *           description: The client's image
  *         reference:
  *           type: string
- *           description: The user's role
+ *           description: The client's role
  *
  *       example:
  *         id: 5f5a64d471c4360017c2e1f3
@@ -93,13 +93,100 @@ module.exports = Router;
 /**
  * @swagger
  * tags:
- *   name: Client
- *   description: The Client management API
- * /client :
+ *   name: Clients
+ *   description: The Clients management API
+ * /clients:
+ *   get:
+ *     summary: Lists all the Clients
+ *     tags: [Clients]
+ *     responses:
+ *       200:
+ *         description: The list of the Clients.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Client'
+ * /clients/{id}:
+ *   get:
+ *     summary: Get the client by id
+ *     tags: [Clients]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The client id
+ *     responses:
+ *       200:
+ *         description: The client response by id
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Client'
+ *       404:
+ *         description: The client was not found
  *   post:
  *     summary: Create a new client
- *     description: Create a new client
- *     tags:
- *       - Client
+ *     tags: [Clients]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Client'
+ *     responses:
+ *       200:
+ *         description: The created client.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Client'
+ *       500:
+ *         description: Some server error
+ *   put:
+ *    summary: Update the client by the id
+ *    tags: [Clients]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: The client id
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Client'
+ *    responses:
+ *      200:
+ *        description: The client was updated
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Client'
+ *      404:
+ *        description: The client was not found
+ *      500:
+ *        description: Some error happened
+ *   delete:
+ *     summary: Remove the client by id
+ *     tags: [Clients]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The client id
  *
+ *     responses:
+ *       200:
+ *         description: The client was deleted
+ *       404:
+ *         description: The client was not found
  */

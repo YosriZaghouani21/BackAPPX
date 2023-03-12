@@ -252,29 +252,8 @@ module.exports = Router;
  *     tags:
  *       - Users
  *
- * /user/blockUser:
- *   put:
- *     summary: Block a user
- *     description: Block a user when subscription ends.
- *     tags:
- *       - User Payment
- *
- * /user/update-subscription:
- *   put:
- *     summary: Update user subscription
- *     description: Update user subscription.
- *     tags:
- *       - User Payment
- *
- *
  */
 
-/**
- * @swagger
- * tags:
- *   name: User Payment
- *   description: The User Payment management API
- */
 
 /*
 

@@ -73,6 +73,7 @@ module.exports = router;
  *     description: Create payment intent.
  *     tags:
  *       - Stripe
+ *
  */
 
 

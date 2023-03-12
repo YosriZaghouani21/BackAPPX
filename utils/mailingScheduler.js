@@ -10,9 +10,7 @@ const mailingExpire = schedule.scheduleJob('0 0 * * *', function(){
             if(user.subscription !== "Blocked" && user.endedAt.getTime() < today){
                 paymentController.sendEmailAfterExpirationDate(user.email,user.name)
                 userController.blockUser(user.email)
-                console.log("blocked email ="+user.email+" "+user.endedAt.getTime()+" "+ today)
-            }else {
-                console.log( "no email sent to  " +user.email+" "+user.endedAt.getTime()+"today's date= "+ today)
+
             }
         })
     })

@@ -329,21 +329,20 @@ exports.uploadphoto = async (req, res) => {
 // update user subscription
 exports.updateUserSubscription = async (email) => {
   try {
-    return await User.findOneAndUpdate(email, {
-        subscription: "Premium",
-        startedAt: new Date(),
-        endedAt: new Date().setMonth( new Date().getMonth() + 1)
+    const updatedUser = await User.findOneAndUpdate({ email }, {
+      subscription: "Premium",
     });
-  }
-    catch (err) {
+    console.log("Premium User");
+    return updatedUser;
+  } catch (err) {
     console.log(err);
-    }
+  }
 };
 
 // block user
 exports.blockUser = async (email) => {
   try {
-    const updatedUser = await User.findOneAndUpdate(email, {
+    const updatedUser = await User.findOneAndUpdate({ email }, {
       subscription: "Blocked",
     });
     console.log("Blocked User");
@@ -356,11 +355,9 @@ exports.blockUser = async (email) => {
 
 // validate user subscription
  function isSubValid (user){
-  ;
     if ((user.subscription!=="Blocked") && (user.subscription!=="Premium" || new Date(user.endedAt) > new Date())) {
         return true;
     } else {
-        this.blockUser(user._id);
         return false;
     }
 
