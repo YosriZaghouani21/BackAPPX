@@ -6,37 +6,48 @@ const connectDB = require("./config/dbConnect");
 const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
-//Upload Image
+const productRoutes = require("./routes/productRoutes.js");
+const orderRoutes = require("./routes/orderRoutes.js");
 const cloudinary = require("./uploads/cloudinary");
-const uploader = require("./uploads/multer");
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-//Basic Configuration
+// Basic Configuration
 const app = express();
+const port = process.env.PORT || 9092;
 
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
-//Routes path
+// Routes path
 app.use("/user", userRoutes);
 app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
+app.use("/product", productRoutes);
+app.use("/order", orderRoutes);
 
-app.post("/upload", uploader.single("image"), async (req, res) => {
-  const upload = await cloudinary.v2.uploader.upload(req.file.path);
+// Upload Image
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "uploads",
+    format: async (req, file) => "png",
+    public_id: (req, file) => "computed-filename-using-request",
+  },
+});
+const upload = multer({ storage: storage });
+
+app.post("/upload", upload.single("image"), async (req, res) => {
+  const uploadResult = await cloudinary.uploader.upload(req.file.path);
   return res.json({
     success: true,
-    file: upload.secure_url,
+    file: uploadResult.secure_url,
   });
 });
 
-//MongoDB setup
+// MongoDB setup
 connectDB();
-const PORT = process.env.PORT || 9092;
-app.listen(PORT, (err) =>
-  err ? console.log(err) : console.log(`server is running on PORT ${PORT}`)
-);
-
-app.get("/", (req, res) => {
-  res.send("Welcome to BACKAPPX");
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
