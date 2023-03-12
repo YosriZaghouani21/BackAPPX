@@ -365,30 +365,6 @@ exports.uploadphoto = async (req, res) => {
 /************************************************************************************************************/
 
 
-
-// update user subscription
-exports.updateUserSubscription = async (email) => {
-  try {
-    return await User.findOneAndUpdate(email, {
-        subscription: "Premium",
-        startedAt: new Date(),
-        endedAt: new Date().setMonth( new Date().getMonth() + 1)
-    });
-  }
-    catch (err) {
-    console.log(err);
-    }
-};
-
-
-
-
-/************************************************************************************************************/
-//*************************************** User Subscription Methods ***************************************//
-/************************************************************************************************************/
-
-
-
 // update user subscription
 exports.updateUserSubscription = async (email) => {
   try {
@@ -418,7 +394,7 @@ exports.blockUser = async (email) => {
 
 // validate user subscription
  function isSubValid (user){
-    if ((user.subscription!=="Blocked") && (user.subscription!=="Premium" || new Date(user.endedAt) > new Date())) {
+    if ((user.subscription!=="Blocked")) {
         return true;
     } else {
         return false;
