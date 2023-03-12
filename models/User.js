@@ -33,6 +33,20 @@ const userSchema = mongoose.Schema({
     data: String,
     default: "",
   },
+
+  lastLogin: {
+    type: Date,
+    default: null
+  },
+
+  startedAt: {
+    type: Date,
+    default: new Date(),
+  },
+  endedAt: {type: Date,
+    default: new Date().setMonth( new Date().getMonth() + 12)
+  },
+  subscription: {type: String, default: "Free",}
 });
 
 module.exports = User = mongoose.model("user", userSchema);

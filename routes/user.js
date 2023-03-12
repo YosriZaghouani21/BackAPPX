@@ -19,6 +19,7 @@ const {
 //Upload Image
 const cloudinary = require("../uploads/cloudinary");
 const uploader = require("../uploads/multer");
+const {blockUser, updateUserSubscription} = require("../controllers/user");
 
 const Router = express.Router();
 
@@ -39,5 +40,7 @@ Router.get("/current", isAuth(), (req, res) => {
 });
 Router.put("/myProject/:id", addMyProject);
 Router.put("/uploadphoto/:id", uploader.single("image"), uploadphoto);
-
+/*******************User Payment****************** */
+Router.put("/blockUser",blockUser );
+Router.put("/update-subscription", updateUserSubscription);
 module.exports = Router;

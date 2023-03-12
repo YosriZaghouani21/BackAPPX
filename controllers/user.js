@@ -111,6 +111,14 @@ exports.login = async (req, res) => {
     if (!isMatch)
       return res.status(401).json({ status:"password not found", msg: `Email ou mot de passe incorrect` });
 
+      if (!isSubValid(user))
+      return res.status(401).json({ msg: `Votre abonnement a expiré` });
+
+      let lastLogin = user.lastLogin;
+
+      user.lastLogin = new Date();
+      user.save();
+
     const payload = {
       id: user._id,
       name: user.name,
@@ -120,9 +128,10 @@ exports.login = async (req, res) => {
     };
 
     const token = await jwt.sign(payload, secretOrkey);
-    return res.status(200).json({ status:"ok",token:token, user });
+    return res.status(200).json({ status:"ok",lastLogin:lastLogin,token:token, user });
+
   } catch (error) {
-    res.status(500).json({ errors: error });
+    res.status(500).json({ errors: error.message });
   }
 };
 
@@ -343,3 +352,49 @@ exports.uploadphoto = async (req, res) => {
     return res.status(500).json({ msg: err });
   }
 };
+
+/************************************************************************************************************/
+//*************************************** User Subscription Methods ***************************************//
+/************************************************************************************************************/
+
+
+
+// update user subscription
+exports.updateUserSubscription = async (email) => {
+  try {
+    return await User.findOneAndUpdate(email, {
+        subscription: "Premium",
+        startedAt: new Date(),
+        endedAt: new Date().setMonth( new Date().getMonth() + 1)
+    });
+  }
+    catch (err) {
+    console.log(err);
+    }
+};
+
+// block user
+exports.blockUser = async (email) => {
+  try {
+    const updatedUser = await User.findOneAndUpdate(email, {
+      subscription: "Blocked",
+    });
+    console.log("Blocked User");
+    return updatedUser;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+
+// validate user subscription
+ function isSubValid (user){
+  ;
+    if ((user.subscription!=="Blocked") && (user.subscription!=="Premium" || new Date(user.endedAt) > new Date())) {
+        return true;
+    } else {
+        this.blockUser(user._id);
+        return false;
+    }
+
+ }
