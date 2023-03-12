@@ -64,6 +64,12 @@ const upload = multer({
 });
 
 // handle the upload
-Router.post("/upload", upload.single("file"), (req, res) => {});
+Router.post("/upload", upload.single("file"), (req, res) => {
+  const fileUrl = `${`http://localhost:9092`}/${req.file.path}`;
+  return res.json({
+    success: true,
+    url: fileUrl,
+  });
+});
 
 module.exports = Router;

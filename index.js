@@ -27,24 +27,24 @@ app.use("/client", clientRoutes);
 app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
 
-// Upload Image
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "uploads",
-    format: async (req, file) => "png",
-    public_id: (req, file) => "computed-filename-using-request",
-  },
-});
-const upload = multer({ storage: storage });
+// // Upload Image
+// const storage = new CloudinaryStorage({
+//   cloudinary: cloudinary,
+//   params: {
+//     folder: "uploads",
+//     format: async (req, file) => "png",
+//     public_id: (req, file) => "computed-filename-using-request",
+//   },
+// });
+// const upload = multer({ storage: storage });
 
-app.post("/upload", upload.single("image"), async (req, res) => {
-  const uploadResult = await cloudinary.uploader.upload(req.file.path);
-  return res.json({
-    success: true,
-    file: uploadResult.secure_url,
-  });
-});
+// app.post("/upload", upload.single("image"), async (req, res) => {
+//   const uploadResult = await cloudinary.uploader.upload(req.file.path);
+//   return res.json({
+//     success: true,
+//     file: uploadResult.secure_url,
+//   });
+// });
 
 // MongoDB setup
 connectDB();
