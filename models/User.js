@@ -33,7 +33,6 @@ const userSchema = mongoose.Schema({
     data: String,
     default: "",
   },
-
   lastLogin: {
     type: Date,
     default: null
