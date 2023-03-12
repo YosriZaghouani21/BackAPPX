@@ -78,24 +78,6 @@ module.exports = Router;
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Project'
- *   post:
- *     summary: Create a new project
- *     tags: [Projects]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Project'
- *     responses:
- *       200:
- *         description: The created project.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Project'
- *       500:
- *         description: Some server error
  * /project/{id}:
  *   get:
  *     summary: Get the project by id
@@ -116,6 +98,24 @@ module.exports = Router;
  *               $ref: '#/components/schemas/Project'
  *       404:
  *         description: The project was not found
+ *   post:
+ *     summary: Create a new project
+ *     tags: [Projects]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Project'
+ *     responses:
+ *       200:
+ *         description: The created project.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Project'
+ *       500:
+ *         description: Some server error
  *   put:
  *    summary: Update the project by the id
  *    tags: [Projects]
