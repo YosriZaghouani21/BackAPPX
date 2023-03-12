@@ -20,6 +20,29 @@ const uploader = require("./uploads/multer");
 mailingService
 //Basic Configuration
 const app = express();
+ //Swagger UI Documentation
+ const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "BACKAPPX API",
+      version: "0.1.0",
+      description: "BACKAPPX API Documentation",
+    },
+    contact : {
+      name : "BACKAPPX",
+      email : "back.app.x@gmail.com"
+    },
+    servers: [
+      {
+        url: "http://localhost:9092",
+        description: "Development server",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+const specs = swaggerJsDoc(options);
 
  //Swagger UI Documentation
  const options = {
@@ -56,6 +79,7 @@ app.use(cors());
 
 //Routes path
 app.use("/user", userRoutes);
+
 app.use("/api-docs", swaggerUi.serve,
     swaggerUi.setup(specs,
         { explorer: true,
@@ -74,6 +98,13 @@ app.post("/upload", uploader.single("image"), async (req, res) => {
   });
 });
 
+app.post("/upload", uploader.single("image"), async (req, res) => {
+  const upload = await cloudinary.v2.uploader.upload(req.file.path);
+  return res.json({
+    success: true,
+    file: upload.secure_url,
+  });
+});
 
 
 //MongoDB setup
