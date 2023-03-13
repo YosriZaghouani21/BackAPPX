@@ -11,10 +11,13 @@ const userSchema = mongoose.Schema({
     type: Date,
     default: new Date(),
   },
-  image: {
+/*   image: {
     public_id: { type: String, default:"avatarPicture" },
     url: { type: String,default:"https://www.gravatar.com/avatar/1234566?size=200&d=mm" },
-  },
+  }, */
+  image: {
+    type:String,
+    default:"https://www.gravatar.com/avatar/1234566?size=200&d=mm"},
   Role: {
     type: String,
     default: "User",
