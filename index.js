@@ -4,11 +4,15 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const connectDB = require("./config/dbConnect");
+//routes declaration
 const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
-const paymeeRoutes = require("./routes/paymee");
+const paymeeRoutes = require("./routes/paymentService");
 const stripeRoutes = require("./routes/stripe");
+const emailServiceRoutes = require("./routes/emailService");
+
+
 const mailingService = require("./utils/mailingScheduler");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
@@ -45,31 +49,6 @@ const app = express();
 };
 const specs = swaggerJsDoc(options);
 
- //Swagger UI Documentation
- const options = {
-   definition: {
-     openapi: "3.0.0",
-     info: {
-       title: "BACKAPPX API",
-       version: "0.1.0",
-       description: "BACKAPPX API Documentation",
-     },
-     contact : {
-       name : "BACKAPPX",
-       email : "back.app.x@gmail.com"
-     },
-     servers: [
-       {
-         url: "http://localhost:9092",
-         description: "Development server",
-       },
-     ],
-   },
-   apis: ["./routes/*.js"],
- };
- const specs = swaggerJsDoc(options);
-
-
 
 
 connectDB();
@@ -92,6 +71,8 @@ app.use("/payment", stripeRoutes);
 app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
 app.use("/paymee", paymeeRoutes);
+app.use("/email", emailServiceRoutes);
+
 app.post("/upload", uploader.single("image"), async (req, res) => {
   const upload = await cloudinary.v2.uploader.upload(req.file.path);
   return res.json({

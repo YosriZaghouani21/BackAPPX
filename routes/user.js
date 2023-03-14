@@ -256,14 +256,3 @@ module.exports = Router;
  *       - Users
  *
  */
-
-
-/*
-
-
-
-
-
-Router.put("/update-subscription", updateUserSubscription);
-//Router.put("/update-subscription", updateUserSubscription);
- */

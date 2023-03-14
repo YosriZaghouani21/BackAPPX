@@ -4,13 +4,13 @@ const paymeeKey = process.env.PAYMEE_KEY;
 const axios = require('axios');
 
 const headers = {
-    "Authorization": `Bearer ${paymeeKey}`,
+    "Authorization": `${paymeeKey}`,
     "Content-Type": "application/json"
 };
 
 
 router.post('/create', (req, res) => {
-    const data = {
+    const data ={
         "vendor": 1265,
         "amount": 45,
         "note": "Commande #1324"

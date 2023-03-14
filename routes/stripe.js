@@ -3,7 +3,7 @@ require("dotenv").config();
 const router = express.Router();
 const User = require("../models/User");
 const userController = require("../controllers/user");
-const paymentController = require("../controllers/payment");
+const paymentController = require("../controllers/paymentsMailing");
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 

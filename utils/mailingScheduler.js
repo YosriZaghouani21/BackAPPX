@@ -1,7 +1,8 @@
 const schedule = require('node-schedule');
 const User = require('../models/User');
-const paymentController = require('../controllers/payment');
+const paymentController = require('../controllers/paymentsMailing');
 const today = new Date().getTime();
+const notificationDate = new Date().getTime() + 10000 ;
 const userController = require('../controllers/user')
 
 const mailingExpire = schedule.scheduleJob('0 0 * * *', function(){
@@ -27,4 +28,13 @@ const mailingExpire = schedule.scheduleJob('0 0 * * *', function(){
         })
     })
   });
+
+  // const time = 10
+  // var i = 0
+  // const pushNotification = schedule.scheduleJob('*/1 * * * * *', function(){
+  //   i++
+  //     console.log(i)
+  //   if (time === i) {
+  //     console.log('push notification')}
+  // });
 
