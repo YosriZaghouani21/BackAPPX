@@ -2,30 +2,6 @@ const express = require("express")
 const nodemailer = require("nodemailer")
 const User = require("../models/User");
 
-
-//-----------------------------------------------------------------------------------------------//
-//---------------------------------- Swagger Documentation -------------------------------------//
-//-----------------------------------------------------------------------------------------------//
-
-/**
- * @swagger
- * /payment:
- * post:
- *  description: Use to request payment
- *  tags:
- *    - Payment
- *    - Stripe
- * responses:
- * '200':
- * description: A successful response
- * content:
- * application/json:
- * '400':
- * description: Bad request
- */
-
-
-
 // sendEmail after payment
 exports.sendEmailConfirmationPayment = async (email) => {
     const invoiceDate = new Date().toLocaleDateString("en-US", {
@@ -33,6 +9,7 @@ exports.sendEmailConfirmationPayment = async (email) => {
         month: "long",
         day: "numeric",
     });
+    const user = await User.findOne({ email: email });
     const InvoiceNumber = Math.floor(Math.random() * 1000000000);
 
     const transporter = nodemailer.createTransport({
@@ -206,7 +183,7 @@ border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width
                                                                         <p
                                                                             style="margin: 0; font-size: 14px; text-align: center; mso-line-height-alt: 16.8px;">
                                                                             <span style="font-size:58px;"><strong>Dear
-                                                                                    karam,</strong></span></p>
+                                                                                    ${user.name},</strong></span></p>
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -1036,7 +1013,7 @@ border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width
         if (err) {
             console.log("error occurs", err);
         } else {
-            console.log("email sent After Payment");
+            console.log("email sent After Payment to : " + email);
 
         }
     });
@@ -3107,3 +3084,8 @@ exports.sendEmailAfterExpirationDate = async (email,name) => {
         }
     });
 }
+
+//-----------------------------------------------------------------------------------------------//
+//---------------------------------- Swagger Documentation -------------------------------------//
+//-----------------------------------------------------------------------------------------------//
+

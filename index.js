@@ -1,14 +1,23 @@
-const express = require("express");
+ const express = require("express");
+
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const connectDB = require("./config/dbConnect");
+//routes declaration
 const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
+
 const productRoutes = require("./routes/productRoutes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
+
+const paymeeRoutes = require("./routes/paymentService");
+
 const stripeRoutes = require("./routes/stripe");
+const emailServiceRoutes = require("./routes/emailService");
+
+
 const mailingService = require("./utils/mailingScheduler");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
@@ -50,18 +59,31 @@ const port = process.env.PORT || 9092;
 };
 const specs = swaggerJsDoc(options);
 
+
+
+connectDB();
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
+
 //Routes path
 app.use("/user", userRoutes);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
+
+app.use("/api-docs", swaggerUi.serve,
+    swaggerUi.setup(specs,
+        { explorer: true,
+          customCssUrl:
+              "https://cdn.jsdelivr.net/npm/swagger-ui-themes@3.0.0/themes/3.x/theme-material.css",
+        })
+);
 app.use("/payment", stripeRoutes);
 app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
 app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
+app.use("/paymee", paymeeRoutes);
+app.use("/email", emailServiceRoutes);
 
 
 /* app.post("/upload", uploader.single("image"), async (req, res) => {
@@ -89,12 +111,17 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 });
 });
 
+
 //MongoDB setup
 connectDB();
-/* const PORT = process.env.PORT || 9092;
+const PORT = process.env.PORT || 9092;
+
 app.listen(PORT, (err) =>
   err ? console.log(err) : console.log(`server is running on PORT ${PORT}`)
 );
+
+
+
 
 app.get("/", (req, res) => {
   res.send("Welcome to BACKAPPX"); */

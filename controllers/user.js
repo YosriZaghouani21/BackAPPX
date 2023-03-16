@@ -6,6 +6,11 @@ const secretOrkey = config.get("secretOrkey");
 const nodemailer = require("nodemailer");
 const RESET_PWD_KEY = config.get("RESET_PWD_KEY");
 const Client_URL = config.get("Client_URL");
+
+const todaysDate = new Date();
+
+//Upload Image
+
 const cloudinary = require("../uploads/cloudinary");
 const path = require("path");
 
@@ -110,6 +115,7 @@ exports.login = async (req, res) => {
       return res.status(404).json({status:"email not found", msg: `Email ou mot de passe incorrect` });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
+
       return res.status(401).json({ status:"password not found", msg: `Email ou mot de passe incorrect` });
 
       if (!isSubValid(user))
@@ -119,6 +125,7 @@ exports.login = async (req, res) => {
 
       user.lastLogin = new Date();
       user.save();
+
 
     const payload = {
       id: user._id,
@@ -734,25 +741,28 @@ exports.getImage = async (req, res) => {
 /************************************************************************************************************/
 
 
-
 // update user subscription
 exports.updateUserSubscription = async (email) => {
   try {
+
     return await User.findOneAndUpdate({email}, {
         subscription: "Premium",
         startedAt: new Date(),
         endedAt: new Date().setMonth( new Date().getMonth() + 1)
+
     });
-  }
-    catch (err) {
+    console.log("Premium User");
+    return updatedUser;
+  } catch (err) {
     console.log(err);
-    }
+  }
 };
 
 // block user
 exports.blockUser = async (email) => {
   try {
-    const updatedUser = await User.findOneAndUpdate({email}, {
+
+    const updatedUser = await User.findOneAndUpdate({ email }, {
       subscription: "Blocked",
     });
     console.log("Blocked User");
@@ -765,11 +775,9 @@ exports.blockUser = async (email) => {
 
 // validate user subscription
  function isSubValid (user){
-  ;
-    if ((user.subscription!=="Blocked") && (user.subscription!=="Premium" || new Date(user.endedAt) > new Date())) {
+    if ((user.subscription!=="Blocked")) {
         return true;
     } else {
-        this.blockUser(user._id);
         return false;
     }
 
