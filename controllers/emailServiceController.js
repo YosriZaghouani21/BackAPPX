@@ -1,4 +1,5 @@
 const email = require("../models/email");
+const client = require("../models/clientModel");
 const nodemailer = require("nodemailer");
 
 
@@ -68,7 +69,7 @@ exports.deleteEmail = async (req, res) => {
     }
 }
 
-// send email
-// export const sendEmail = async (req, res) => {
-//
-// }
+// send email to clients
+exports.sendEmail = async (req, res) => {
+
+}

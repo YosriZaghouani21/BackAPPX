@@ -2,13 +2,14 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
 const emailSchema = mongoose.Schema({
-    from : {
+    sender : {
         type: String,
         required: true
     },
-    to : {
-        type: String,
-        required: true
+     recipient: {
+         type: [mongoose.Schema.Types.ObjectId],
+         ref: "client",
+         required: true
     },
     subject : {
         type: String,
@@ -20,8 +21,9 @@ const emailSchema = mongoose.Schema({
     },
     scheduleTime : {
         type: Date,
-    }
     },
+    },
+
     {
         timestamps: true
     });
