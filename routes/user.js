@@ -16,7 +16,8 @@ const {
   uploadphoto,
   blockUser,
   updateUserSubscription,
-  uploadImage
+  uploadImage,
+  getImage
 } = require("../controllers/user.js");
 const multer = require("multer");
 const fs = require("fs");
@@ -69,6 +70,8 @@ const upload = multer({
   // Use userId here
 }); */
 Router.put("/upload/:userId", upload.single("file"), uploadImage);
+Router.get("/image/:userId/:imageName", getImage);
+
 
 Router.put("/blockUser", blockUser);
 Router.put("/update-subscription", updateUserSubscription);

@@ -704,7 +704,7 @@ exports.uploadImage = async (req, res) => {
   const { userId } = req.params;
 
   if (req.file && req.file.path) {
-    const fileUrl = `D:\\SIM_ESPRIT\\PIM\\website-back\\${userId}\\${req.file.path}`;
+    const fileUrl = path.basename(req.file.path);
     const updatedUser = await User.findByIdAndUpdate(userId, {
       image: fileUrl
     });
@@ -722,6 +722,12 @@ exports.uploadImage = async (req, res) => {
     });
   }
 };
+
+exports.getImage = async (req, res) => {
+  const { userId,imageName } = req.params;
+  res.sendFile(`D:/SIM_ESPRIT/PIM/website-back/uploads/${userId}/${imageName}`);
+};
+
 
 /************************************************************************************************************/
 //*************************************** User Subscription Methods ***************************************//
