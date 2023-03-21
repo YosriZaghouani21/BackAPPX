@@ -14,6 +14,8 @@ const orderRoutes = require("./routes/orderRoutes.js");
 
 const paymeeRoutes = require("./routes/paymentService");
 
+// const pushNotificationRoutes = require("./routes/pushNotificationService");
+
 const stripeRoutes = require("./routes/stripe");
 const emailServiceRoutes = require("./routes/emailService");
 
@@ -61,7 +63,6 @@ const specs = swaggerJsDoc(options);
 
 
 
-connectDB();
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
@@ -84,6 +85,7 @@ app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
 app.use("/paymee", paymeeRoutes);
 app.use("/email", emailServiceRoutes);
+// app.use("/push", pushNotificationRoutes);
 
 
 /* app.post("/upload", uploader.single("image"), async (req, res) => {
@@ -119,13 +121,3 @@ const PORT = process.env.PORT || 9092;
 app.listen(PORT, (err) =>
   err ? console.log(err) : console.log(`server is running on PORT ${PORT}`)
 );
-
-
-
-
-app.get("/", (req, res) => {
-  res.send("Welcome to BACKAPPX"); */
-  
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});

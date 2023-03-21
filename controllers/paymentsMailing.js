@@ -1007,7 +1007,6 @@ border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width
 </body>
 
 </html>`,
-
     };
     transporter.sendMail(mailOptions, (err, data) => {
         if (err) {

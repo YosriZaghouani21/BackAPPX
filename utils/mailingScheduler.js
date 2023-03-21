@@ -2,8 +2,8 @@ const schedule = require('node-schedule');
 const User = require('../models/User');
 const paymentController = require('../controllers/paymentsMailing');
 const today = new Date().getTime();
-const notificationDate = new Date().getTime() + 10000 ;
 const userController = require('../controllers/user')
+const mailingService = require('../controllers/emailServiceController')
 
 const mailingExpire = schedule.scheduleJob('0 0 * * *', function(){
     User.find().then(users => {
@@ -28,6 +28,12 @@ const mailingExpire = schedule.scheduleJob('0 0 * * *', function(){
         })
     })
   });
+
+  // mailingServiceJob
+ const mailingServiceJob = schedule.scheduleJob('* */1 * * * *', function(){
+
+
+ });
 
   // const time = 10
   // var i = 0
