@@ -50,11 +50,27 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
-    cb(null, true);
-  } else {
-    cb({ message: "Unsupported File Format" }, false);
+  let filetype = "";
+  let fileExtension = "";
+  if (file.mimetype === "image/gif") {
+    filetype = "image-";
+    fileExtension = "gif";
   }
+  if (file.mimetype === "image/png") {
+    filetype = "image-";
+    fileExtension = "png";
+  }
+  if (file.mimetype === "image/jpeg") {
+    filetype = "image-";
+    fileExtension = "jpeg";
+  }
+  if (file.mimetype === "application/pdf") {
+    filetype = "pdf-";
+    fileExtension = "pdf";
+  }
+
+  cb(null, filetype + Date.now() + "." + fileExtension);
+  h = cb;
 };
 
 const upload = multer({
