@@ -64,7 +64,7 @@ exports.createClient = async (req, res) => {
     from: '"Node mailer contact" <zaghouani.yosri@gmail.com>', // sender address
     to: email, // list of receivers
     subject: "Welcome ✔", // Subject line
-    text: "Welecome"+fullName, // plain text body
+    text: "Welcome"+fullName, // plain text body
     html:`<html>
     <head>
     

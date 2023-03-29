@@ -10,7 +10,7 @@ To get started with BackAppX, follow these steps:
 2. Install the necessary dependencies by running `npm install`.
 3. Start the server by running `npm start`.
 
-Once the server is running, you can access the BackAppX API by sending requests to `http://localhost:3000`.
+Once the server is running, you can access the BackAppX API by sending requests to `http://localhost:9092`.
 
 ## Using the API
 

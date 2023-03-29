@@ -4,11 +4,16 @@ const emailServiceController = require("../controllers/emailServiceController");
 
 const Router = express.Router();
 
+
+//CRUD
 Router.post("/create", emailServiceController.createEmail);
 Router.get("/", emailServiceController.findAllEmails);
 Router.get("/:id", emailServiceController.findOneEmail);
 Router.put("/:id", emailServiceController.updateEmail);
 Router.delete("/:id", emailServiceController.deleteEmail);
+
+//SendEmail
+Router.post("/send/:id", emailServiceController.sendEmail);
 
 
 module.exports = Router;

@@ -3,10 +3,11 @@ mongoose.set("strictQuery", false);
 
 const emailSchema = mongoose.Schema({
     sender : {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
         required: true
     },
-     recipient: {
+     recipients: {
          type: [mongoose.Schema.Types.ObjectId],
          ref: "client",
          required: true
