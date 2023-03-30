@@ -4,21 +4,30 @@ const express = require("express");
 
 const Router = express.Router();
 
+
 //Engine Storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const userId = req.user.id; // get the user ID from the request object
-    const uploadDir = `./uploads/${userId}`; // create a directory path with the user ID
-    fs.mkdirSync(uploadDir, { recursive: true }); // create the directory if it doesn't exist
-    cb(null, uploadDir);
-  },
+
+/*     cb(null, "./uploads/");
+ */
+const userId = req.user.id; // get the user ID from the request object
+const uploadDir = `./uploads/${userId}`; // create a directory path with the user ID
+fs.mkdirSync(uploadDir, { recursive: true }); // create the directory if it doesn't exist
+cb(null, uploadDir);
+
+},
   filename: function (req, file, cb) {
     cb(null, Date.now() + "--" + file.originalname);
   },
 });
 
 //file validation
-const fileFilter = (req, file, cb) => {
+
+/* const fileFiter = (req, file, cb) => {
+ */  
+  const fileFilter = (req, file, cb) => {
+
   if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
     cb(null, true);
   } else {
@@ -44,6 +53,9 @@ const checkStorageLimit = (req, res, next) => {
 
 const upload = multer({
   storage: storage,
+
+/*   limites: { fileSize: 1024 * 1024 },
+  fileFilter: fileFiter, */
   limits: { fileSize: 1024 * 1024 },
   fileFilter: fileFilter,
 });
@@ -54,3 +66,4 @@ Router.post("/upload", upload.single("file"), checkStorageLimit, (req, res) => {
 });
 
 module.exports = Router;
+

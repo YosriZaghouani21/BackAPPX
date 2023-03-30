@@ -8,11 +8,23 @@ const projectSchema = mongoose.Schema({
   reference: String,
 
   description: String,
+  image: {
+    public_id: { type: String },
+    url: { type: String },
+  },
+  bgColor: String,
 
   createdAt: {
     type: Date,
     default: new Date(),
   },
+  clients:[
+    {
+      type: ObjectId,
+      ref: "client",
+    },
+
+  ]
 });
 
 module.exports = Project = mongoose.model("project", projectSchema);
