@@ -22,7 +22,6 @@ const emailSchema = mongoose.Schema({
     },
     scheduleTime : {
         type: Date,
-        default: Date.now
     },
     },
 

@@ -3,8 +3,6 @@
 const Email = require("../models/email");
 const Client = require("../models/clientModel");
 const User = require("../models/User");
-
-
 const nodemailer = require("nodemailer");
 
 
@@ -12,8 +10,10 @@ const nodemailer = require("nodemailer");
 
 // Create and Save a new email
 exports.createEmail = async (req, res) => {
-const { sender, recipients, subject, body,scheduleTime } = req.body;
-  const newEmail = new Email({ sender, recipients, subject, body,scheduleTime });
+const { sender, recipients, subject, body,scheduleDate } = req.body;
+  const scheduleTime = new Date(scheduleDate?scheduleDate:Date.now());
+
+  const newEmail = new Email({ sender, recipients, subject, body,scheduleTime});
   try {
     const savedEmail = await newEmail.save();
     res.status(200).json(savedEmail);

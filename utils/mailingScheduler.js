@@ -16,6 +16,7 @@ const mailingExpire = schedule.scheduleJob('0 0 * * *', async function(){
         }
     }
 });
+
 // subscriptionReminderJob
 const subscriptionReminderJob = schedule.scheduleJob('0 0 * * *', async function(){
     try {
@@ -35,18 +36,16 @@ const subscriptionReminderJob = schedule.scheduleJob('0 0 * * *', async function
 const mailingServiceJob = schedule.scheduleJob('* */1 * * * *', async function() {
     try {
         const now = new Date().getTime();
-        const emails = await Email.find({ scheduleTime: { $lt: now } })
+        const emails = await Email.find()
             .sort({ scheduleTime: 'asc' })
             .limit(100);
 
         for (const email of emails) {
-            await mailingService.sendScheduledEmail((await email)._id);
-            await Email.findByIdAndDelete((await email)._id);
-            console.log(`Sent scheduled email ${(await email)._id}`);
-        }
-
-        if (emails.length > 0) {
-            console.log(`Sent ${emails.length} scheduled emails`);
+            if (email.scheduleTime.getTime() - now > -1000 && email.scheduleTime.getTime() - now < 1000 ) {
+                await mailingService.sendScheduledEmail((await email)._id);
+                await Email.findByIdAndDelete((await email)._id);
+                console.log(`Sent scheduled email ${(await email)._id}`);
+            }
         }
     } catch (error) {
         console.error('Error occurred while sending scheduled emails:', error);
