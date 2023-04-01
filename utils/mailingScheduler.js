@@ -32,7 +32,7 @@ const subscriptionReminderJob = schedule.scheduleJob('0 0 * * *', async function
 });
 
 // mailingServiceJob
-const mailingServiceJob = schedule.scheduleJob("*/1 * * * *", async function() {
+const mailingServiceJob = schedule.scheduleJob('* */1 * * * *', async function() {
     try {
         const now = new Date().getTime();
         const emails = await Email.find({ scheduleTime: { $lt: now } })
