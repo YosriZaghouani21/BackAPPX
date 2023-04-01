@@ -1,8 +1,6 @@
 const Email = require("../models/email");
 const Client = require("../models/clientModel");
 const User = require("../models/User");
-
-
 const nodemailer = require("nodemailer");
 
 
@@ -10,8 +8,10 @@ const nodemailer = require("nodemailer");
 
 // Create and Save a new email
 exports.createEmail = async (req, res) => {
-const { sender, recipients, subject, body,scheduleTime } = req.body;
-  const newEmail = new Email({ sender, recipients, subject, body,scheduleTime });
+const { sender, recipients, subject, body,scheduleDate } = req.body;
+  const scheduleTime = new Date(scheduleDate?scheduleDate:Date.now());
+
+  const newEmail = new Email({ sender, recipients, subject, body,scheduleTime});
   try {
     const savedEmail = await newEmail.save();
     res.status(200).json(savedEmail);
@@ -112,7 +112,42 @@ exports.sendEmail = async (req, res) => {
     catch (err) {
         return res.status(500).json({ msg: err.message });
     }
+}
 
+exports.sendScheduledEmail = async (emailId) => {
+    try {
+        const email = await Email.findById(emailId);
+        const clients_ids = await email.recipients;
+        const clientEmails = await Client.find({ _id: { $in: clients_ids } }).select('email');
+        const user = await User.findById(email.sender);
+        if (email) {
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: "zaghouani.yosri@gmail.com",
+                    pass: "yimktgkvxvbbylzp",
+                },
+            });
+            const mailOptions = {
+                from: user.email,
+                to: clientEmails.map((client) => client.email),
+                subject: email.subject,
+                html: email.body,
+            };
+            transporter.sendMail(mailOptions, (err, data) => {
+                if (err) {
+                    console.log("error occurs", err);
+                } else {
+                    console.log("email sent!");
 
-
+                }
+            });
+        }
+        else {
+            console.log("Email not found");
+        }
+    }
+    catch (err) {
+        console.log(err.message);
+    }
 }
