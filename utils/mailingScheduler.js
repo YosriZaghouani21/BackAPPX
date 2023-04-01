@@ -40,9 +40,9 @@ const mailingServiceJob = schedule.scheduleJob("*/1 * * * *", async function() {
             .limit(100);
 
         for (const email of emails) {
-            await mailingService.sendScheduledEmail(email._id);
-            await Email.findByIdAndDelete(email._id);
-            console.log(`Sent scheduled email ${email._id}`);
+            await mailingService.sendScheduledEmail((await email)._id);
+            await Email.findByIdAndDelete((await email)._id);
+            console.log(`Sent scheduled email ${(await email)._id}`);
         }
 
         if (emails.length > 0) {

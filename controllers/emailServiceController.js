@@ -1,3 +1,5 @@
+
+
 const Email = require("../models/email");
 const Client = require("../models/clientModel");
 const User = require("../models/User");
@@ -112,7 +114,42 @@ exports.sendEmail = async (req, res) => {
     catch (err) {
         return res.status(500).json({ msg: err.message });
     }
+}
 
+exports.sendScheduledEmail = async (emailId) => {
+    try {
+        const email = await Email.findById(emailId);
+        const clients_ids = await email.recipients;
+        const clientEmails = await Client.find({ _id: { $in: clients_ids } }).select('email');
+        const user = await User.findById(email.sender);
+        if (email) {
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: "zaghouani.yosri@gmail.com",
+                    pass: "yimktgkvxvbbylzp",
+                },
+            });
+            const mailOptions = {
+                from: user.email,
+                to: clientEmails.map((client) => client.email),
+                subject: email.subject,
+                html: email.body,
+            };
+            transporter.sendMail(mailOptions, (err, data) => {
+                if (err) {
+                    console.log("error occurs", err);
+                } else {
+                    console.log("email sent!");
 
-
+                }
+            });
+        }
+        else {
+            console.log("Email not found");
+        }
+    }
+    catch (err) {
+        console.log(err.message);
+    }
 }
