@@ -50,3 +50,4 @@ const mailingServiceJob = schedule.scheduleJob('* */1 * * * *', async function()
         console.error('Error occurred while sending scheduled emails:', error);
     }
 });
+
