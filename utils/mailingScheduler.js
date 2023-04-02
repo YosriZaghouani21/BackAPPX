@@ -1,6 +1,7 @@
 const schedule = require('node-schedule');
 const User = require('../models/User');
 const Email = require('../models/email');
+
 const paymentController = require('../controllers/paymentsMailing');
 const today = new Date().getTime();
 const userController = require('../controllers/user')
@@ -43,7 +44,6 @@ const mailingServiceJob = schedule.scheduleJob('* */1 * * * *', async function()
         for (const email of emails) {
             if (email.scheduleTime.getTime() - now > -1000 && email.scheduleTime.getTime() - now < 1000 ) {
                 await mailingService.sendScheduledEmail((await email)._id);
-                await Email.findByIdAndDelete((await email)._id);
                 console.log(`Sent scheduled email ${(await email)._id}`);
             }
         }
