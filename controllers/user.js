@@ -9,6 +9,7 @@ const Client_URL = config.get("Client_URL");
 
 //Upload Image
 const cloudinary = require("../uploads/cloudinary");
+const path = require("path");
 
 //Password Crypt
 const bcrypt = require("bcryptjs");
@@ -652,18 +653,49 @@ exports.userData = async (req, res) => {
 };
 
 //upload photo to user
-exports.uploadphoto = async (req, res) => {
-  try {
-    const image = await cloudinary.v2.uploader.upload(req.file.path);
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
-      image,
+// exports.uploadphoto = async (req, res) => {
+//   try {
+//     const image = await cloudinary.v2.uploader.upload(req.file.path);
+//     const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+//       image,
+//     });
+//     res.json({
+//       success: true,
+//       file: image.secure_url,
+//       user: updatedUser,
+//     });
+//   } catch (err) {
+//     return res.status(500).json({ msg: err.message });
+//   }
+// };
+
+exports.uploadImage = async (req, res) => {
+  const { userId } = req.params;
+
+  if (req.file && req.file.path) {
+    const fileUrl = path.basename(req.file.path);
+    console.log("image path", fileUrl);
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      image: fileUrl,
     });
-    res.json({
+
+    return res.json({
+      status: "ok",
       success: true,
-      file: image.secure_url,
+      url: fileUrl,
       user: updatedUser,
     });
-  } catch (err) {
-    return res.status(500).json({ msg: err.message });
+  } else {
+    return res.status(400).json({
+      status: "error",
+      message: "File not found",
+    });
   }
+};
+
+exports.getImage = async (req, res) => {
+  const { userId, imageName } = req.params;
+  res.sendFile(
+    `C:/Users/zagho/OneDrive/Documents/GitHub/BackAPPX/uploads/${userId}/${imageName}`
+  );
 };

@@ -12,7 +12,8 @@ const {
   addMyProject,
   forgotPassword,
   resetPassword,
-  uploadphoto,
+  uploadImage,
+  getImage,
 } = require("../controllers/user.js");
 
 // Upload Image
@@ -39,7 +40,7 @@ Router.put("/myProject/:id", addMyProject);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const userId = "63e8050800f30e5a856f3ea6";
+    const userId = req.params.userId;
     const uploadDir = `./uploads/${userId}`;
     fs.mkdirSync(uploadDir, { recursive: true });
     cb(null, uploadDir);
@@ -75,17 +76,20 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1024 * 1024 },
+  limits: { fileSize: 5024 * 1024 },
   fileFilter: fileFilter,
 });
 
 // handle the upload
-Router.post("/upload", upload.single("file"), (req, res) => {
-  const fileUrl = `${`http://localhost:9092`}/${req.file.path}`;
-  return res.json({
-    success: true,
-    url: fileUrl,
-  });
-});
+// Router.post("/upload", upload.single("file"), (req, res) => {
+//   const fileUrl = `${`http://localhost:9092`}/${req.file.path}`;
+//   return res.json({
+//     success: true,
+//     url: fileUrl,
+//   });
+// });
+
+Router.put("/upload/:userId", upload.single("file"), uploadImage);
+Router.get("/image/:userId/:imageName", getImage);
 
 module.exports = Router;
