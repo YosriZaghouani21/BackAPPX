@@ -1,13 +1,14 @@
 const multer = require("multer");
-
 const fs = require("fs");
 const express = require("express");
 
 const Router = express.Router();
 
+
 //Engine Storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+
 /*     cb(null, "./uploads/");
  */
 const userId = req.user.id; // get the user ID from the request object
@@ -22,6 +23,7 @@ cb(null, uploadDir);
 });
 
 //file validation
+
 /* const fileFiter = (req, file, cb) => {
  */  
   const fileFilter = (req, file, cb) => {
@@ -51,6 +53,7 @@ const checkStorageLimit = (req, res, next) => {
 
 const upload = multer({
   storage: storage,
+
 /*   limites: { fileSize: 1024 * 1024 },
   fileFilter: fileFiter, */
   limits: { fileSize: 1024 * 1024 },

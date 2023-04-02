@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
   }, */
   image: {
     type:String,
-    default:"https://www.gravatar.com/avatar/1234566?size=200&d=mm"},
+    default:"avatar.png"},
   Role: {
     type: String,
     default: "User",

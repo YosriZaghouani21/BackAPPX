@@ -22,6 +22,7 @@ exports.createClient = async (req, res) => {
       return res
         .status(401)
         .json({ msg: `Utilisateur existant , utiliser un autre E-mail` });
+
     const newClient = new Client({
       name,
       familyName,
@@ -319,7 +320,7 @@ exports.createClient = async (req, res) => {
 //    html: "<b>Let's begin</b>", // html body
   });
 
-  res.status(201).json(newClient);
+  res.status(201).json({status:"created",newClient});
   } catch (error) {
     res.status(500).json({ errors: error });
   }
@@ -330,11 +331,12 @@ exports.createClient = async (req, res) => {
 // Update client
 exports.updateClient = async (req, res) => {
   try {
-    const { name, familyName, email,phoneNumber,password,reference,image } = req.body;
+    const { name, familyName,fullName, email,phoneNumber,password,reference,image } = req.body;
 
     const updatedClient = await Client.findByIdAndUpdate(req.params.id, {
-      name,
+       name,
        familyName,
+       fullName,
        email,
        phoneNumber,
        password,
@@ -343,6 +345,7 @@ exports.updateClient = async (req, res) => {
     });
 
     return res.status(201).json({
+      status:"updated",
       msg: "Le client a été modifié avec succès",
       user: updatedClient,
     });
@@ -376,8 +379,8 @@ exports.allClientsByProjectReference = async (req, res) => {
 exports.deleteClient = async (req, res) => {
   try {
     await Client.findByIdAndDelete(req.params.id);
-    res.json({ msg: "client supprimé avec succès" });
-  } catch (err) {
+    res.json({status:"deleted",msg: "client supprimé avec succès" });
+  } catch (err) {                                      
     return res.status(500).json({ msg: err.message });
   }
 };

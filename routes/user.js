@@ -19,6 +19,9 @@ const {
   uploadImage,
   getImage
 } = require("../controllers/user.js");
+
+// Upload Image
+
 const multer = require("multer");
 const fs = require("fs");
 
@@ -31,6 +34,7 @@ Router.delete("/delete/:id", deleteUser);
 Router.put("/forgot-password", forgotPassword);
 Router.post("/userData", userData);
 Router.put("/reset-password", resetPassword);
+
 Router.get("/users", allUsers);
 Router.get("/user/:id", getSingleUser);
 Router.get("/current", isAuth(), (req, res) => {
@@ -41,6 +45,7 @@ Router.put("/myProject/:id", addMyProject);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+
     const userId = req.params.userId;
     const uploadDir = `./uploads/${userId}`;
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -52,6 +57,29 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
+/*   let filetype = "";
+  let fileExtension = "";
+  if (file.mimetype === "image/gif") {
+    filetype = "image-";
+    fileExtension = "gif";
+  }
+  if (file.mimetype === "image/png") {
+    filetype = "image-";
+    fileExtension = "png";
+  }
+  if (file.mimetype === "image/jpeg") {
+    filetype = "image-";
+    fileExtension = "jpeg";
+  }
+  if (file.mimetype === "application/pdf") {
+    filetype = "pdf-";
+    fileExtension = "pdf";
+  }
+
+  cb(null, filetype + Date.now() + "." + fileExtension);
+  h = cb;
+*/
+
   if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
     cb(null, true);
   } else {

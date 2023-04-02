@@ -9,6 +9,7 @@ const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
 
+
 const productRoutes = require("./routes/productRoutes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
 
@@ -26,10 +27,9 @@ const swaggerJsDoc = require("swagger-jsdoc");
 
 //Upload Image
 const cloudinary = require("./uploads/cloudinary");
-const uploader = require("./uploads/multer");
-
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
 
 //Mailing Service jobs
 mailingService
@@ -68,6 +68,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 
+
 //Routes path
 app.use("/user", userRoutes);
 
@@ -83,6 +84,7 @@ app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
 app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
+
 app.use("/paymee", paymeeRoutes);
 app.use("/email", emailServiceRoutes);
 // app.use("/push", pushNotificationRoutes);
@@ -114,8 +116,17 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 });
 
 
-//MongoDB setup
+// app.post("/upload", upload.single("image"), async (req, res) => {
+//   const uploadResult = await cloudinary.uploader.upload(req.file.path);
+//   return res.json({
+//     success: true,
+//     file: uploadResult.secure_url,
+//   });
+// });
+
+// MongoDB setup
 connectDB();
+
 const PORT = process.env.PORT || 9092;
 
 app.listen(PORT, (err) =>

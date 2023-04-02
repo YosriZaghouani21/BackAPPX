@@ -1,7 +1,6 @@
 const schedule = require('node-schedule');
 const User = require('../models/User');
 const Email = require('../models/email');
-
 const paymentController = require('../controllers/paymentsMailing');
 const today = new Date().getTime();
 const userController = require('../controllers/user')
@@ -51,3 +50,4 @@ const mailingServiceJob = schedule.scheduleJob('* */1 * * * *', async function()
         console.error('Error occurred while sending scheduled emails:', error);
     }
 });
+
