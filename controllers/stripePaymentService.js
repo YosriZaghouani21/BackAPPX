@@ -5,14 +5,15 @@ const Product = require("../models/product");
 
 
 exports.createPaymentIntent = async (req, res) => {
-    const stripe = require('stripe')(req.headers.stripePrivatekey)
+    const stripe = require('stripe')(req.headers.stripekey)
     const {orderId} = req.body;
 
     const order= Order.findById(orderId)
     const product = Product.findById(order.product)
 
     stripe.paymentIntents.create({
-        amount: product.price * order.quantity,
+        // amount: product.price * order.quantity,
+        amount: 100,
         currency: 'usd',
 
     }).then((paymentIntent) => {

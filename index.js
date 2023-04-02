@@ -85,7 +85,7 @@ app.use("/client", clientRoutes);
 app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
 
-app.use("/paymee", paymeeRoutes);
+app.use("/paymentService", paymeeRoutes);
 app.use("/email", emailServiceRoutes);
 // app.use("/push", pushNotificationRoutes);
 
