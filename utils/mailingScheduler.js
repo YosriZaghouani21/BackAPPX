@@ -43,7 +43,6 @@ const mailingServiceJob = schedule.scheduleJob('* */1 * * * *', async function()
         for (const email of emails) {
             if (email.scheduleTime.getTime() - now > -1000 && email.scheduleTime.getTime() - now < 1000 ) {
                 await mailingService.sendScheduledEmail((await email)._id);
-                await Email.findByIdAndDelete((await email)._id);
                 console.log(`Sent scheduled email ${(await email)._id}`);
             }
         }

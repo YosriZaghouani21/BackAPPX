@@ -380,7 +380,7 @@ exports.deleteClient = async (req, res) => {
   try {
     await Client.findByIdAndDelete(req.params.id);
     res.json({status:"deleted",msg: "client supprimé avec succès" });
-  } catch (err) {
+  } catch (err) {                                      
     return res.status(500).json({ msg: err.message });
   }
 };

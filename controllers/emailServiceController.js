@@ -9,12 +9,12 @@ const nodemailer = require("nodemailer");
 // Create and Save a new email
 exports.createEmail = async (req, res) => {
 const { sender, recipients, subject, body,scheduleDate } = req.body;
-  const scheduleTime = new Date(scheduleDate?scheduleDate:Date.now());
+  const scheduleTime = new Date( scheduleDate ? scheduleDate : Date.now());
 
   const newEmail = new Email({ sender, recipients, subject, body,scheduleTime});
   try {
     const savedEmail = await newEmail.save();
-    res.status(200).json(savedEmail);
+    res.status(200).json({status:"created",savedEmail});
   } catch (err) {
     res.status(500).json(err);
   }
