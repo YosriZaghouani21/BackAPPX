@@ -84,12 +84,15 @@ exports.sendEmail = async (req, res) => {
         const clientEmails = await Client.find({ _id: { $in: clients_ids } }).select('email');
         const user = await User.findById(email.sender);
         if (email) {
-            const transporter = nodemailer.createTransport({
-                service: "gmail",
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for 465, false for other ports
                 auth: {
-                    user: "zaghouani.yosri@gmail.com",
-                    pass: "yimktgkvxvbbylzp",
+                    user: process.env.ACCOUNT_EMAIL, // generated ethereal user
+                    pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
                 },
+                tls: { rejectUnauthorized: false },
             });
             const mailOptions = {
                 from: user.email,

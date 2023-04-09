@@ -7,7 +7,6 @@ const paymentController = require("../controllers/paymentsMailing");
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
-
 router.get("/config", async (req, res) => {
     const public_key = process.env.STRIPE_PUBLIC_KEY;
     res.send({
@@ -17,9 +16,8 @@ router.get("/config", async (req, res) => {
 });
 
 router.post("/create-payment-intent", async (req, res) => {
-    const { items, email } = req.body;
+    const { email } = req.body;
     const user =  User.findOne(email);
-    console.log('email= '+ email)
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripe.paymentIntents.create({
         amount: 4000,

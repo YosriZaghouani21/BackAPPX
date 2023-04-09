@@ -13,7 +13,6 @@ const Client_URL = config.get("Client_URL");
 // create client
 exports.createClient = async (req, res) => {
   const { name, familyName,email,phoneNumber,reference,password } = req.body;
-  
   const fullName = name +" "+familyName;
   try {
 
@@ -54,15 +53,15 @@ exports.createClient = async (req, res) => {
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: "zaghouani.yosri@gmail.com", // generated ethereal user
-        pass: "yimktgkvxvbbylzp", // generated ethereal password
+        user: process.env.ACCOUNT_EMAIL, // generated ethereal user
+        pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
       },
       tls: { rejectUnothorized: false },
     });
 
     // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Node mailer contact" <zaghouani.yosri@gmail.com>', // sender address
+      from: 'BackAppX', // sender address
     to: email, // list of receivers
     subject: "Welcome ✔", // Subject line
     text: "Welcome"+fullName, // plain text body
@@ -243,7 +242,8 @@ exports.createClient = async (req, res) => {
               <!-- start copy -->
               <tr>
                 <td bgcolor="#ffffff" align="left" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                  <h1 style="margin: 0 0 12px; font-size: 32px; font-weight: 400; line-height: 48px;">Welcome, `+fullName+`</h1>
+                  <h1 style="margin: 0 0 12px; font-size: 32px; font-weight: 400; line-height: 48px;">Welcome, `+fullName+
+        `</h1>
                   <p style="margin: 0;">Thank you for signing up with Paste. We strive to produce high quality email templates that you can use for your transactional or marketing needs.</p>
                 </td>
               </tr>
@@ -434,8 +434,8 @@ exports.forgotPassword = async (req, res) => {
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: "zaghouani.yosri@gmail.com", // generated ethereal user
-        pass: "yimktgkvxvbbylzp", // generated ethereal password
+        user: process.env.ACCOUNT_EMAIL, // generated ethereal user
+        pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
       },
       tls: { rejectUnauthorized: false },
     });

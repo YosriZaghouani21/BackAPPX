@@ -17,9 +17,8 @@ const paymentSchema = new Schema({
         ref: 'order',
     }
     ,
-    paymentMethod: {
+    stripePaymentIntentId: {
         type: String,
-
     }
 },
 {

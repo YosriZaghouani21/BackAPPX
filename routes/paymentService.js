@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const paymentService = require('../controllers/stripePaymentService');
 
+
+router.get('/', paymentService.getAllPayments);
 router.post('/pay', paymentService.createPaymentIntent);
+
 
 module.exports = router;
 
