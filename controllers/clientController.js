@@ -1,9 +1,10 @@
-const Client = require("../models/clientModel.js");
+const Client = require("../models/Client");
 
 // create client
 exports.createClient = async (req, res) => {
-  const { name, familyName,email,phoneNumber,password,image,reference } = req.body;
-  const fullName = name +" "+familyName;
+  const { name, familyName, email, phoneNumber, password, image, reference } =
+    req.body;
+  const fullName = name + " " + familyName;
   try {
     const newClient = new Client({
       name,
@@ -13,7 +14,7 @@ exports.createClient = async (req, res) => {
       phoneNumber,
       password,
       image,
-      reference
+      reference,
     });
 
     await newClient.save();
@@ -22,8 +23,16 @@ exports.createClient = async (req, res) => {
     res.status(500).json({ errors: error });
   }
 };
-
-
+exports.allClients = async (req, res) => {
+  try {
+    const clients = await Client.find();
+    res.status(200).json({
+      clients,
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
 
 // Update project
 //exports.updateProject = async (req, res) => {
@@ -46,7 +55,7 @@ exports.createClient = async (req, res) => {
 //   })
 //   .catch(err => {
 //    res.status(500).json({error:err})
-//   }) 
+//   })
 //};
 ////Delete a project
 //exports.deleteProject = async (req, res) => {

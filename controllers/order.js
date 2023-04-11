@@ -3,22 +3,23 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const Order = require("../models/order");
-const Product = require("../models/product");
+const Product = require("../models/Product");
+const Client = require("../models/Client");
 
 // Handle incoming GET requests to /orders
 exports.GetOrder = async (req, res) => {
   try {
+    console.log("Fetching orders...");
     const orders = await Order.find()
       .populate({
         path: "product",
         select: "name price",
-        model: Product,
       })
-      /*  .populate({
-        path: "customer",
+      .populate({
+        path: "client",
         select: "name email",
-        model: User,
-      })*/
+        model: "Client",
+      })
       .exec();
 
     const response = {
@@ -26,9 +27,9 @@ exports.GetOrder = async (req, res) => {
       orders: orders.map((order) => {
         return {
           _id: order._id,
-          product: order.product,
+          product: order.product.map((p) => p.name),
           quantity: order.quantity,
-          customer: order.customer,
+          client: order.client ? order.client.name : null, // check if client is not null
           createdAt: order.createdAt,
           request: {
             type: "GET",
@@ -40,6 +41,7 @@ exports.GetOrder = async (req, res) => {
 
     res.status(200).json(response);
   } catch (err) {
+    console.log("Error fetching orders: ", err);
     res.status(500).json({
       error: err,
     });
@@ -55,12 +57,23 @@ exports.AddOrder = async (req, res) => {
           message: "Product not found",
         });
       }
-      const order = new Order({
-        _id: mongoose.Types.ObjectId(),
-        quantity: req.body.quantity,
-        product: req.body.productId,
+
+      // Find the client by ID
+      return Client.findById(req.body.clientId).then((client) => {
+        if (!client) {
+          return res.status(404).json({
+            message: "Client not found",
+          });
+        }
+
+        const order = new Order({
+          _id: mongoose.Types.ObjectId(),
+          quantity: req.body.quantity,
+          product: req.body.productId,
+          client: req.body.clientId, // Set the client ID
+        });
+        return order.save();
       });
-      return order.save();
     })
     .then((result) => {
       console.log(result);
@@ -116,7 +129,9 @@ exports.GetOrderByID = async (req, res) => {
 //Delete order with ID
 exports.DeleteOrder = async (req, res) => {
   try {
-    const result = await Order.deleteOne({ _id: req.params.orderId }).exec();
+    const result = await Order.deleteOne({ _id: req.params.orderID }).exec();
+    console.log(result);
+
     res.status(200).json({
       message: "Order deleted",
       request: {
@@ -125,6 +140,7 @@ exports.DeleteOrder = async (req, res) => {
         body: { productId: "ID", quantity: "Number" },
       },
     });
+    console.log("Order ID:", req.params.orderID);
   } catch (err) {
     res.status(500).json({
       error: err,

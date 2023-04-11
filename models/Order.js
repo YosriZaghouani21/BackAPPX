@@ -1,23 +1,27 @@
 const mongoose = require("mongoose");
+const Product = require("./Product");
 
 const orderSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  product: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-    required: true,
-  },
+  product: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+  ],
   quantity: {
     type: Number,
     default: 1,
     required: true,
-    min: 1, // Ensures that quantity is at least 1
+    min: 1,
   },
-  /* customer: {
+  client: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Client",
     required: true,
-  },*/
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,

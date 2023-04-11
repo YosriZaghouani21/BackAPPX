@@ -13,6 +13,10 @@ const projectSchema = mongoose.Schema({
     type: Date,
     default: new Date(),
   },
+  image: {
+    public_id: { type: String },
+    url: { type: String },
+  },
 });
 
 module.exports = Project = mongoose.model("project", projectSchema);
