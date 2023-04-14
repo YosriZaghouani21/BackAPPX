@@ -14,7 +14,6 @@ const orderRoutes = require("./routes/orderRoutes.js");
 
 
 
-const orderRoutes = require("./routes/orderRoutes.js");
 
 const paymeeRoutes = require("./routes/paymentService");
 
@@ -84,6 +83,7 @@ app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
 app.use("/product", productRoutes);
 app.use("/category", categoryRoutes);
+app.use("/order", orderRoutes);
 app.use("/order", orderRoutes);
 app.use("/paymentService", paymeeRoutes);
 app.use("/email", emailServiceRoutes);
