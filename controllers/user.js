@@ -8,9 +8,6 @@ const RESET_PWD_KEY = config.get("RESET_PWD_KEY");
 const Client_URL = config.get("Client_URL");
 const cloudinary = require("../uploads/cloudinary");
 
-//Upload Image
-const cloudinary = require("../uploads/cloudinary");
-
 //Password Crypt
 const bcrypt = require("bcryptjs");
 const projectModel = require("../models/projectModel.js");
@@ -24,7 +21,7 @@ exports.register = async (req, res) => {
     if (searchRes)
       return res
         .status(401)
-        .json({status:"failed", msg: `Utilisateur existant , utiliser un autre E-mail` });
+        .json({ status: "failed", msg: `Utilisateur existant , utiliser un autre E-mail` });
 
     const newUser = new User({
       name,
@@ -38,7 +35,7 @@ exports.register = async (req, res) => {
     newUser.password = hash;
 
     await newUser.save();
-    res.status(201).json({status:"created", newUser});
+    res.status(201).json({ status: "created", newUser });
   } catch (error) {
     res.status(500).json({ errors: error });
   }
@@ -109,21 +106,21 @@ exports.login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user)
-      return res.status(404).json({status:"email not found", msg: `Email ou mot de passe incorrect` });
+      return res.status(404).json({ status: "email not found", msg: `Email ou mot de passe incorrect` });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(401).json({ status:"password not found", msg: `Email ou mot de passe incorrect` });
+      return res.status(401).json({ status: "password not found", msg: `Email ou mot de passe incorrect` });
 
     const payload = {
       id: user._id,
       name: user.name,
       email: user.email,
       phoneNumber: user.phoneNumber,
-      imageUrl:user.image.url
+      imageUrl: user.image.url
     };
 
     const token = await jwt.sign(payload, secretOrkey);
-    return res.status(200).json({ status:"ok",token:token, user });
+    return res.status(200).json({ status: "ok", token: token, user });
   } catch (error) {
     res.status(500).json({ errors: error });
   }
@@ -155,7 +152,7 @@ exports.updateUser = async (req, res) => {
     });
 
     return res.status(201).json({
-      status:"updated",
+      status: "updated",
       msg: "L'utilisateur a été modifié avec succès",
       user: updatedUser,
     });
@@ -179,7 +176,7 @@ exports.allUsers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
-    res.json({status:"deleted", msg: "utilisateur supprimé avec succès" });
+    res.json({ status: "deleted", msg: "utilisateur supprimé avec succès" });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
@@ -214,7 +211,7 @@ exports.addMyProject = async (req, res) => {
       useFindAndModify: false,
     }).populate({ path: "myProject", model: Project });
 
-    return res.status(200).json({status:"ok",user});
+    return res.status(200).json({ status: "ok", user });
   } catch (error) {
     console.log(error);
     res.status(500).json({ errors: error.message });
@@ -264,7 +261,7 @@ exports.forgotPassword = async (req, res) => {
     await user.updateOne({ resetLink: token });
 
     return res.status(200).json({
-      status:"ok",
+      status: "ok",
       message: "Email has been sent, kindly activate your account",
       token,
     });
@@ -298,7 +295,7 @@ exports.resetPassword = async (req, res) => {
           } else {
             return res.status(200).json({
 
-              status:"ok",
+              status: "ok",
               message: "Your password has been changed",
             });
           }
@@ -313,19 +310,19 @@ exports.resetPassword = async (req, res) => {
 exports.userData = async (req, res) => {
   const { token } = req.body;
 
-  if (token !== null ){
-  const user = jwt.verify(token, secretOrkey);
-  const useremail = user.email;
-  User.findOne({ email: useremail }).populate({path: "myProject", model: Project})
-    .then((data) => {
-      res.send({ status: "ok", data: data });
-    })
-    .catch((error) => {
-      res.send({ status: "error", data: error });
-    });
-}else{
-  console.log("not logged in");
-}
+  if (token !== null) {
+    const user = jwt.verify(token, secretOrkey);
+    const useremail = user.email;
+    User.findOne({ email: useremail }).populate({ path: "myProject", model: Project })
+      .then((data) => {
+        res.send({ status: "ok", data: data });
+      })
+      .catch((error) => {
+        res.send({ status: "error", data: error });
+      });
+  } else {
+    console.log("not logged in");
+  }
 
 };
 
@@ -337,7 +334,7 @@ exports.uploadphoto = async (req, res) => {
       image,
     });
     res.json({
-      status:"ok",
+      status: "ok",
       success: true,
       file: image.secure_url,
       user: updatedUser,

@@ -1,5 +1,5 @@
 {
-  "mongoUri": "mongodb+srv://Yosri:0sbYJUe7QfseeMGT@backappx.sz4hcd5.mongodb.net/test",
+  "mongoUri": "mongodb+srv://fedi:FfzRIQ43iCO2LO7W@cluster0.nm9wsg9.mongodb.net/backappx?retryWrites=true&w=majority",
   "secretOrkey": "my secret",
   "Client_URL": "http://localhost:9092",
   "RESET_PWD_KEY": "accountactivatekey123456789"

@@ -6,6 +6,10 @@ const connectDB = require("./config/dbConnect");
 const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
+const categoryRoutes = require("./routes/categoryRoutes.js");
+const productRoutes = require("./routes/productRoutes.js");
+const orderRoutes = require("./routes/orderRoutes.js");
+
 //Upload Image
 const cloudinary = require("./uploads/cloudinary");
 const uploader = require("./uploads/multer");
@@ -21,6 +25,9 @@ app.use(cors());
 app.use("/user", userRoutes);
 app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
+app.use("/product", productRoutes);
+app.use("/category", categoryRoutes);
+app.use("/order", orderRoutes);
 
 app.post("/upload", uploader.single("image"), async (req, res) => {
   const upload = await cloudinary.v2.uploader.upload(req.file.path);
@@ -30,13 +37,6 @@ app.post("/upload", uploader.single("image"), async (req, res) => {
   });
 });
 
-app.post("/upload", uploader.single("image"), async (req, res) => {
-  const upload = await cloudinary.v2.uploader.upload(req.file.path);
-  return res.json({
-    success: true,
-    file: upload.secure_url,
-  });
-});
 
 //MongoDB setup
 connectDB();
