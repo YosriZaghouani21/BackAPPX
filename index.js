@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const connectDB = require("./config/dbConnect");
 const userRoutes = require("./routes/user.js");
@@ -9,9 +8,6 @@ const clientRoutes = require("./routes/clientRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
 const categorieRoutes = require("./routes/categorieRoutes.js");
-const cloudinary = require("./uploads/cloudinary");
-const multer = require("multer");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 // Basic Configuration
 const app = express();
@@ -29,27 +25,30 @@ app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
 app.use("/categorie", categorieRoutes);
 
-// // Upload Image
-// const storage = new CloudinaryStorage({
-//   cloudinary: cloudinary,
-//   params: {
-//     folder: "uploads",
-//     format: async (req, file) => "png",
-//     public_id: (req, file) => "computed-filename-using-request",
-//   },
-// });
-// const upload = multer({ storage: storage });
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
-// app.post("/upload", upload.single("image"), async (req, res) => {
-//   const uploadResult = await cloudinary.uploader.upload(req.file.path);
-//   return res.json({
-//     success: true,
-//     file: uploadResult.secure_url,
+//Push Notification / Socket IO
+app.get("/home", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});
+
+// io.on("connection", (socket) => {
+//   socket.on("chat message", (msg) => {
+//     console.log("message: " + msg);
 //   });
 // });
 
+io.on("connection", (socket) => {
+  socket.on("chat message", (msg) => {
+    io.emit("chat message", msg);
+  });
+});
+
 // MongoDB setup
 connectDB();
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
