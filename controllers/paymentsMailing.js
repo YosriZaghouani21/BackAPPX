@@ -15,9 +15,9 @@ exports.sendEmailConfirmationPayment = async (email) => {
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "zaghouani.yosri@gmail.com",
-            pass: "yimktgkvxvbbylzp",
-        },
+            user: process.env.ACCOUNT_EMAIL, // generated ethereal user
+            pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
+          },
     });
     const mailOptions = {
         from: "zaghouani.yosri@gmail.com",
@@ -2082,9 +2082,9 @@ exports.sendEmailAfterExpirationDate = async (email,name) => {
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "zaghouani.yosri@gmail.com",
-            pass: "yimktgkvxvbbylzp",
-        },
+            user: process.env.ACCOUNT_EMAIL, // generated ethereal user
+            pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
+          },
     });
     const mailOptions = {
         from: "BackAppX",

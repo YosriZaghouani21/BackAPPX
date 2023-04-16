@@ -14,7 +14,7 @@ const express = require("express");
 const { registerRules, validator } = require("../middlewares/validator.js");
 const isAuth = require("../middlewares/passport-setup.js");
 
-const uploader = require("../uploads/multer");
+const upload = require("../uploads/multer");
 const {
     createClient,
     allClients,
@@ -37,8 +37,8 @@ Router.delete("/client/:id", deleteClient);
 Router.put("/client/:id", updateClient);
 Router.get("/client/:reference", allClientsByProjectReference);
 Router.get("/clientbyid/:id", getSingleClient);
-/* Router.put("/uploadPhotoClient/:id",  uploader.single("image"), uploadPhotoToClient);
- */
+Router.put("/uploadPhotoClient/:id",  upload.single("image"), uploadPhotoToClient);
+
 Router.put("/clientforgot-password", forgotPassword);
 Router.put("/clientresetpassword", clientresetPassword);
 Router.post("/login", loginclient);

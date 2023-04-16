@@ -23,6 +23,10 @@ const emailSchema = mongoose.Schema({
     scheduleTime : {
         type: Date,
     },
+    project : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "project",
+    }
     },
 
     {
