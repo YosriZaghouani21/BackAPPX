@@ -12,15 +12,20 @@ exports.sendEmailConfirmationPayment = async (email) => {
     const user = await User.findOne({ email: email });
     const InvoiceNumber = Math.floor(Math.random() * 1000000000);
 
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
         auth: {
             user: process.env.ACCOUNT_EMAIL, // generated ethereal user
             pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
-          },
+
+        },
+        tls: { rejectUnauthorized: false },
     });
+
     const mailOptions = {
-        from: "zaghouani.yosri@gmail.com",
+        from: "BackAppX",
         to: email,
         subject: "Payment Confirmation",
         html: `<!DOCTYPE html>
@@ -1026,12 +1031,15 @@ exports.sendEmailBeforeExpirationDate = async (email, name) => {
         day: "numeric",
     });
     const user = await User.findOne({ email: email });
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
         auth: {
-            user: "zaghouani.yosri@gmail.com",
-            pass: "yimktgkvxvbbylzp",
+            user: process.env.ACCOUNT_EMAIL, // generated ethereal user
+            pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
         },
+        tls: { rejectUnauthorized: false },
     });
     const mailOptions = {
         from: "BackAppX",
@@ -2079,12 +2087,16 @@ exports.sendEmailAfterExpirationDate = async (email,name) => {
         month: "long",
         day: "numeric",
     });
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
         auth: {
             user: process.env.ACCOUNT_EMAIL, // generated ethereal user
             pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
-          },
+        },
+        tls: { rejectUnauthorized: false },
+
     });
     const mailOptions = {
         from: "BackAppX",

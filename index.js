@@ -21,7 +21,7 @@ const stripeRoutes = require("./routes/stripe");
 const emailServiceRoutes = require("./routes/emailService");
 
 
-const mailingService = require("./utils/mailingScheduler");
+const mailingService = require("./services/mailingScheduler");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 
@@ -61,13 +61,9 @@ const port = process.env.PORT || 9092;
 };
 const specs = swaggerJsDoc(options);
 
-
-
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
-
-
 
 //Routes path
 app.use("/user", userRoutes);
@@ -84,13 +80,12 @@ app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
 app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
-
-app.use("/paymee", paymeeRoutes);
+app.use("/paymentService", paymeeRoutes);
 app.use("/email", emailServiceRoutes);
 // app.use("/push", pushNotificationRoutes);
 
 
-/* app.post("/upload", uploader.single("image"), async (req, res) => {
+/* app.post("/upload", uploader.single("image "), async (req, res) => {
   const upload = await cloudinary.v2.uploader.upload(req.file.path); */
   // Upload Image
 const storage = new CloudinaryStorage({

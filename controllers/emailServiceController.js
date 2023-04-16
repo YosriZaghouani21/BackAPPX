@@ -2,10 +2,7 @@ const Email = require("../models/email");
 const Client = require("../models/clientModel");
 const User = require("../models/User");
 const Project = require("../models/projectModel");
-
 const nodemailer = require("nodemailer");
-
-
 
 
 // Create and Save a new email
@@ -14,6 +11,7 @@ exports.createEmail = async (req, res) => {
     const scheduleTime = new Date(scheduleDate?scheduleDate:Date.now());
 
   const newEmail = new Email({ sender, recipients, subject, body,scheduleTime,project});
+
   try {
     const savedEmail = await newEmail.save();
     res.status(200).json({status:"created",savedEmail});
@@ -84,12 +82,16 @@ exports.sendEmail = async (req, res) => {
         const clientEmails = await Client.find({ _id: { $in: clients_ids } }).select('email');
         const user = await User.findById(email.sender);
         if (email) {
-            const transporter = nodemailer.createTransport({
-                service: "gmail",
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for 465, false for other ports
                 auth: {
                     user: process.env.ACCOUNT_EMAIL, // generated ethereal user
                     pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
-                  },
+
+                },
+                tls: { rejectUnauthorized: false },                                                                                                         
             });
             const mailOptions = {
                 from: user.email,
