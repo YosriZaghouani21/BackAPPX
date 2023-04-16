@@ -8,8 +8,6 @@ exports.createClient = async (req, res) => {
   try {
     const newClient = new Client({
       name,
-      familyName,
-      fullName,
       email,
       phoneNumber,
       password,

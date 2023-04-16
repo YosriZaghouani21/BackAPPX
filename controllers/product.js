@@ -5,11 +5,14 @@ const Product = require("../models/Product");
 // Find products
 exports.GetProduct = async (req, res) => {
   try {
-    const docs = await Product.find().select("name price _id").exec();
+    const docs = await Product.find()
+      .select("name price _id category")
+      .populate("category", "name")
+      .exec();
     const response = {
       count: docs.length,
       products: docs.map((doc) => {
-        return {
+        let product = {
           name: doc.name,
           price: doc.price,
           _id: doc._id,
@@ -18,6 +21,13 @@ exports.GetProduct = async (req, res) => {
             url: "http://localhost:9092/products/" + doc._id,
           },
         };
+        if (doc.category) {
+          product.category = {
+            name: doc.category.name,
+            _id: doc.category._id,
+          };
+        }
+        return product;
       }),
     };
     res.status(200).json(response);

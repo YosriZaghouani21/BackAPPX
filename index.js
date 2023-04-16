@@ -8,6 +8,7 @@ const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
+const categorieRoutes = require("./routes/categorieRoutes.js");
 const cloudinary = require("./uploads/cloudinary");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
@@ -26,6 +27,7 @@ app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
 app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
+app.use("/categorie", categorieRoutes);
 
 // // Upload Image
 // const storage = new CloudinaryStorage({
