@@ -103,8 +103,8 @@ exports.register = async (req, res) => {
   } catch (error) {
     res.status(500).json({ errors: error });
   }
-}; */
-
+};
+ */
 // Login User
 
 exports.login = async (req, res) => {
@@ -256,8 +256,8 @@ exports.forgotPassword = async (req, res) => {
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: "zaghouani.yosri@gmail.com", // generated ethereal user
-        pass: "yimktgkvxvbbylzp", // generated ethereal password
+        user: process.env.ACCOUNT_EMAIL, // generated ethereal user
+        pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
       },
       tls: { rejectUnauthorized: false },
     });

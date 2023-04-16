@@ -2,6 +2,8 @@ const Project = require("../models/projectModel.js");
 const config = require("config");
 const { concat } = require("lodash");
 const cloudinary = require("../uploads/cloudinary");
+const path = require("path");
+const fs = require("fs");
 
 // create project
 exports.createProject = async (req, res) => {
@@ -67,5 +69,79 @@ exports.getSingleProject = async (req, res) => {
     res.status(200).json({ project });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
+  }
+};
+
+exports.uploadImage = async (req, res) => {
+  const { projectId } = req.params;
+
+  if (req.file && req.file.path) {
+    const fileUrl = path.basename(req.file.path);
+    console.log("image path", fileUrl);
+    const updatedProject = await Project.findByIdAndUpdate(projectId, {
+      image: fileUrl,
+    });
+
+    return res.json({
+      status: "ok",
+      success: true,
+      url: fileUrl,
+      project: updatedProject,
+    });
+  } else {
+    return res.status(400).json({
+      status: "error",
+      message: "File not found",
+    });
+  }
+};
+exports.getFile = async (req, res) => {
+  const { projectId,fileName } = req.params;
+  res.sendFile(`D:/SIM_ESPRIT/PIM/website-back/uploads/${projectId}/${fileName}`);
+};
+exports.getImages = async (req, res) => {
+  const { projectId } = req.params;
+  const uploadDir = `./uploads/${projectId}`;
+  try {
+    const files = await fs.promises.readdir(uploadDir);
+    const imageFiles = files.filter((file) => {
+      const extension = file.split(".").pop().toLowerCase();
+      return ["jpeg", "jpg", "png", "gif", "pdf"].includes(extension);
+    });
+    const images = await Promise.all(
+      imageFiles.map(async (file) => {
+        const filePath = `D:/SIM_ESPRIT/PIM/website-back/uploads/${projectId}/${file}`;
+        const stats = await fs.promises.stat(filePath);
+        const sizeInBytes = stats.size;
+        const sizeInKB = Math.round(sizeInBytes / 1024);
+        const name = file;
+        const type = file.split(".").pop().toLowerCase();
+        return { name, sizeInBytes, sizeInKB, type, path: filePath };
+      })
+    );
+    res.status(200).json({ images });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to get images" });
+  }
+};
+
+exports.deleteImage = async (req, res) => {
+  const { projectId, imageName } = req.params;
+  const imagePath = path.join(
+    __dirname,
+    `../uploads/${projectId}/${imageName}`
+  );
+  try {
+    // Check if file exists
+    fs.accessSync(imagePath, fs.constants.F_OK);
+
+    // Delete file
+    fs.unlinkSync(imagePath);
+
+    res.status(200).json({ status:"deleted",message: "Image deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete image" });
   }
 };

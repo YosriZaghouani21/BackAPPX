@@ -19,6 +19,7 @@ exports.sendEmailConfirmationPayment = async (email) => {
         auth: {
             user: process.env.ACCOUNT_EMAIL, // generated ethereal user
             pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
+
         },
         tls: { rejectUnauthorized: false },
     });
@@ -2095,6 +2096,7 @@ exports.sendEmailAfterExpirationDate = async (email,name) => {
             pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
         },
         tls: { rejectUnauthorized: false },
+
     });
     const mailOptions = {
         from: "BackAppX",

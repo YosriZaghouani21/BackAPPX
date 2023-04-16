@@ -45,8 +45,7 @@ exports.createClient = async (req, res) => {
    
 
     await newClient.save();
-    
-
+               
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -320,6 +319,7 @@ exports.createClient = async (req, res) => {
 //    html: "<b>Let's begin</b>", // html body
   });
 
+
   res.status(201).json({status:"created",newClient});
   } catch (error) {
     res.status(500).json({ errors: error });
@@ -399,12 +399,12 @@ exports.getSingleClient = async (req, res) => {
 exports.uploadPhotoToClient = async (req, res) => {
   try {
     const image = await cloudinary.v2.uploader.upload(req.file.path);
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
-      image,
+    const updatedUser = await Client.findByIdAndUpdate(req.params.id, {
+      image:image.secure_url,
     });
     res.json({
       success: true,
-      file: image.secure_url,
+      file: image,
       user: updatedUser,
     });
   } catch (err) {
