@@ -3,25 +3,22 @@ const Order = require("../models/order");
 const Product = require("../models/product");
 const Payment = require("../models/payment");
 
-
-
 exports.createPaymentIntent = async (req, res) => {
     const stripe = require('stripe')(req.headers.stripekey)
     const {orderId} = req.body;
 
-    const order= Order.findById(orderId)
-    const product = Product.findById(order.product)
+    const order= await Order.findById(orderId)
+    const product = await Product.findById(order.product)
 
-    stripe.paymentIntents.create({
-        // amount: product.price * order.quantity,
-        amount: 1000,
+    await stripe.paymentIntents.create({
+        amount: /*(product.price * order.quantity)*/ 1000,
         currency: 'usd',
         payment_method_types: ['card']
 
     }).then((paymentIntent) => {
         if (paymentIntent) {
             const newPayment = new Payment({
-                // project: order.project,
+                // project: order.project?? '',
                 order: orderId,
                 stripePaymentIntentId: paymentIntent.id,
             })
