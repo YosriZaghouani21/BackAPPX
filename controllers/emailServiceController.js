@@ -2,14 +2,12 @@ const Email = require("../models/email");
 const Client = require("../models/clientModel");
 const User = require("../models/User");
 const Project = require("../models/projectModel");
-
 const nodemailer = require("nodemailer");
 
 
 // Create and Save a new email
 exports.createEmail = async (req, res) => {
-
-const { sender, recipients, subject, body,scheduleDate,project } = req.body;
+    const { sender, recipients, subject, body,scheduleDate,project } = req.body;
     const scheduleTime = new Date(scheduleDate?scheduleDate:Date.now());
 
   const newEmail = new Email({ sender, recipients, subject, body,scheduleTime,project});
@@ -91,8 +89,9 @@ exports.sendEmail = async (req, res) => {
                 auth: {
                     user: process.env.ACCOUNT_EMAIL, // generated ethereal user
                     pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
+
                 },
-                tls: { rejectUnauthorized: false },
+                tls: { rejectUnauthorized: false },                                                                                                         
             });
             const mailOptions = {
                 from: user.email,
@@ -119,7 +118,16 @@ exports.sendEmail = async (req, res) => {
         return res.status(500).json({ msg: err.message });
     }
 }
-
+let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: process.env.ACCOUNT_EMAIL, // generated ethereal user
+      pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
+    },
+    tls: { rejectUnauthorized: false },
+  });
 exports.sendScheduledEmail = async (emailId) => {
     try {
         const email = await Email.findById(emailId);
@@ -130,9 +138,9 @@ exports.sendScheduledEmail = async (emailId) => {
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                    user: "zaghouani.yosri@gmail.com",
-                    pass: "yimktgkvxvbbylzp",
-                },
+                    user: process.env.ACCOUNT_EMAIL, // generated ethereal user
+                    pass: process.env.ACCOUNT_PASSWORD, // generated ethereal password
+                  },
             });
             const mailOptions = {
                 from: user.email,

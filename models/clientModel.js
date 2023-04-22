@@ -8,7 +8,10 @@ const clientSchema = mongoose.Schema({
   email:String,
   phoneNumber:Number,
   password:String,
-  image:String,
+  image:{
+    type:String,
+    default:"https://www.gravatar.com/avatar/1234566?size=200&d=mm"
+  },
   reference: String,
   createdAt: {
     type: Date,
