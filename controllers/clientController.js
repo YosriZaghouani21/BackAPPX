@@ -441,7 +441,7 @@ exports.forgotPassword = async (req, res) => {
     });
 
     let info = await transporter.sendMail({
-      from: "noreplybackappX@backapp.com",
+      from: 'BackAppX <BackAppX@gmail.com>',
       to: email,
       subject: "Hello ✔",
       text: "Account Activation link",
