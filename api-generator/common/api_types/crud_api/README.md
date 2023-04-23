@@ -2,7 +2,7 @@
 
 ## Description
 
-This is a generated project from BackAppX api-generator.
+This is an auto generated project from BackAppX api-generator.
 
 ## Requirements
 
@@ -13,9 +13,8 @@ This is a generated project from BackAppX api-generator.
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-username/my-node-app.git`
-2. Change into the directory: `cd my-node-app`
-3. Install dependencies: `npm install`
+1. Clone this repository
+2. Install dependencies: `npm install`
 
 ## Usage
 
@@ -35,11 +34,8 @@ You can set these environment variables in a `.env` file in the root directory o
 
 The application provides the following endpoints:
 
-- `GET /api/users`: Get a list of all users
-- `POST /api/users`: Create a new user
-- `GET /api/users/:id`: Get a specific user by ID
-- `PUT /api/users/:id`: Update a specific user by ID
-- `DELETE /api/users/:id`: Delete a specific user by ID
+- `GET /api/login`: Sign in a user
+- `POST /api/register`: Register a new user
 
 ## Contributing
 
@@ -47,8 +43,11 @@ If you would like to contribute to this project, please follow these steps:
 
 1. Fork the repository
 2. Create a new branch: `git checkout -b my-feature-branch`
-3. Make your changes and commit them: `git commit -am 'Add some feature'`
+3. Make your changes and commit them: `git commit -m 'Add some feature'`
 4. Push to the branch: `git push origin my-feature-branch`
 5. Create a pull request
+
+## BackAppX
+All rights reserved. © 2023
 
 

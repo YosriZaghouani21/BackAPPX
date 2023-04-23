@@ -5,27 +5,35 @@ const exec = promisify(require('child_process').exec);
 
 // generate the api in the api-generator folder
 router.post("/", async (req, res) => {
-    const {database_url, port} = req.body;
+    const api_type = req.body.api_type;
+    let api_generator_name = ''
     try {
         if (!fs.existsSync('./api-generator/api')) {
             // Create the api directory
             fs.mkdirSync('./api-generator/api');
             console.log('API directory created successfully!');
-        } else {
+        }
+        else {
             fs.rmdirSync('./api-generator/api', { recursive: true });
             console.log('API directory deleted successfully!');
             fs.mkdirSync('./api-generator/api');
             console.log('API directory created successfully!');
         }
 
+        if (api_type !== 'crud') {
+            api_generator_name = 'payment-api-generator';
+        } else {
+            api_generator_name = 'auth-api-generator';
+        }
+
         let commands = [];
         // Read the commands from the file
         if (process.platform === 'win32') {
             // Windows
-             commands = fs.readFileSync('./bin/api-generator.bat', 'utf-8').split('\n');
+             commands = fs.readFileSync(`./bin/bat/${api_generator_name}.bat`, 'utf-8').split('\n');
         }else {
             // Linux
-             commands = fs.readFileSync('./bin/api-generator.sh', 'utf-8').split('\n');
+             commands = fs.readFileSync(`./bin/bin/${api_generator_name}.sh`, 'utf-8').split('\n');
         }
 
         // Execute each command in the api-generator folder
@@ -35,7 +43,7 @@ router.post("/", async (req, res) => {
         await Promise.all(promises);
 
 
-        res.send('API commands executed successfully!');
+        res.send(`${api_generator_name} commands executed successfully!`);
     } catch (err) {
         console.error(`Error: ${err}`);
         res.status(500).send('Error executing API commands');
@@ -52,10 +60,10 @@ router.post("/push", async (req, res) => {
         // Get the server platform
         if (process.platform === 'win32') {
             // Windows
-             commands = fs.readFileSync('./bin/api-generator-push.bat', 'utf-8').split('\n');
+             commands = fs.readFileSync('./bin/bat/api-generator-push.bat', 'utf-8').split('\n');
         }else {
             // Linux
-             commands = fs.readFileSync('./bin/api-generator-push.sh', 'utf-8').split('\n');
+             commands = fs.readFileSync('./bin/sh/api-generator-push.sh', 'utf-8').split('\n');
         }
 
         // Execute each command in the api-generator folder
