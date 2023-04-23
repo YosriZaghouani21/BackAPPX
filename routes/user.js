@@ -1,5 +1,11 @@
 const express = require("express");
 const { registerRules, validator } = require("../middlewares/validator.js");
+
+const jwt = require("jsonwebtoken");
+const _ = require("lodash");
+const config = require("config");
+const secretOrkey = config.get("secretOrkey");
+
 const isAuth = require("../middlewares/passport-setup.js");
 const {
   register,
@@ -19,6 +25,7 @@ const {
   uploadImage,
   getImage
 } = require("../controllers/user.js");
+
 
 // Upload Image
 
@@ -43,6 +50,197 @@ Router.get("/current", isAuth(), (req, res) => {
 });
 Router.put("/myProject/:id", addMyProject);
 
+
+// ************************************************************** GIT STRATEGY **************************************************************
+const passport = require('passport');
+const GitHubStrategy = require('passport-github2').Strategy;
+const GitLabStrategy = require('passport-gitlab2').Strategy;
+const User = require ('../models/User');
+
+const router = express.Router();
+require('dotenv').config();
+
+passport.use(
+  new GitHubStrategy(
+      {
+          clientID: process.env.GITHUB_CLIENT_ID,
+          clientSecret: process.env.GITHUB_CLIENT_SECRET,
+          callbackURL: "/user/github/callback"
+      },
+      async(accessToken,refreshToken,profile,cb)=>{
+
+          const user = await User.findOne({
+              gitId: profile.id,
+              provider:'github'
+          });
+          if(!user){
+              console.log('Adding new github user to DB..');
+              const newUser = new User({
+                  gitId: profile._json.id,
+                  name: profile._json.login,
+                  email: profile._json.email,
+                  image: profile._json.avatar_url,
+                  provider:'github'
+              });
+              await newUser.save();
+              return cb(null,newUser);
+          }else{
+              console.log('Github user already exist in DB..');
+              return cb(null,user);
+          } 
+          console.log(profile);
+      }
+    
+  )
+) 
+passport.use(
+  new GitLabStrategy(
+      {
+          clientID: process.env.GITLAB_CLIENT_ID,
+          clientSecret: process.env.GITLAB_CLIENT_SECRET,
+          callbackURL: "/user/gitlab/callback"
+      },
+      async(accessToken,refreshToken,profile,cb)=>{
+
+          const user = await User.findOne({
+              gitId: profile.id,
+              provider:'gitlab'
+          });
+          if(!user){
+              console.log('Adding new gitlab user to DB..');
+              const newUser = new User({
+                  gitId: profile._json.id,
+                  name: profile._json.username,
+                  email: profile._json.commit_email,
+                  image: profile._json.avatar_url,
+                  provider:'gitlab'
+              });
+              await newUser.save();
+              return cb(null,newUser);
+          }else{
+              console.log('Gitlab user already exist in DB..');
+              return cb(null,user);
+          }
+      }
+    
+  )
+) 
+
+ // Serialize and deserialize user for session storage
+ passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  User.findById(user._id, (err, user) => {
+    done(err, user);
+  });
+});
+//************************************************************** GIT STRATEGY END **************************************************************
+//************************************************************** GIT AUTH **************************************************************
+const CLIENT_URL = "http://localhost:3000/";
+var token =""
+var provider=""
+
+Router.get("/login/success", (req, res) => {
+  if (token !=""){
+    res.status(200).json({
+      success: true,
+      message: "ok",
+      token: token,
+      provider:provider
+    });
+  }else{
+    res.status(401).json({
+      success: false,
+      message: "not ok"
+    });
+  }
+});
+
+Router.get("/login/failed", (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: "failure",
+  });
+});
+
+// Route for logging out
+Router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
+Router.get('/dashboard', function(req, res) {
+  if (!req.user) {
+    // User is not authenticated, send an error response
+    res.status(401).json({ message: 'Unauthorized' });
+  } else {
+    // User is authenticated, send the user object as a JSON response
+    res.json({ user: req.user });
+  }
+});
+Router.get("/github", passport.authenticate("github", { scope: ["profile"] }));
+
+Router.get(
+  "/github/callback",
+  passport.authenticate("github", {
+//    successRedirect:CLIENT_URL,
+    failureRedirect: "/login/failed",
+  }),async function(req,res){
+    try {
+    console.log(req.user.name);
+/*     req.session.user = {
+      id: req.user._id,
+      username: req.user.name,
+    }; */
+
+    const payload = {
+      id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      image: req.user.image,
+    };
+
+    token = await jwt.sign(payload, secretOrkey);
+    provider = "gitlab"
+    res.redirect(`${CLIENT_URL}loading`)
+  } catch (error) {
+    res.status(500).json({ errors: error.message });
+  }
+  }
+);
+
+
+
+Router.get("/gitlab", passport.authenticate("gitlab", { scope: ["profile"] }));
+
+Router.get(
+  "/gitlab/callback",
+  passport.authenticate("gitlab", {
+/*     successRedirect:CLIENT_URL,
+ */    failureRedirect: "/login/failed",
+  }),async function(req,res){
+    try {
+
+
+    const payload = {
+      id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      image: req.user.image,
+    };
+
+    token = await jwt.sign(payload, secretOrkey);
+    provider = "gitlab"
+    res.redirect(`${CLIENT_URL}loading`)
+  } catch (error) {
+    res.status(500).json({ errors: error.message });
+  }
+  }
+);
+
+//************************************************************** GIT AUTH ENDS **************************************************************
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
 

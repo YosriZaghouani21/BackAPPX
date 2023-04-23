@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
   }, */
   image: {
     type:String,
-    default:"avatar.png"},
+    default:"http://localhost:9092/user/image/avatar/avatar.png"},
   Role: {
     type: String,
     default: "User",
@@ -25,6 +25,10 @@ const userSchema = mongoose.Schema({
   Fonction: {
     type: String,
     default: "",
+  },
+  provider:{
+    type:String,
+    default:"BackAppX"
   },
   myProject: [
     {
@@ -47,6 +51,10 @@ const userSchema = mongoose.Schema({
   },
   endedAt: {type: Date,
     default: new Date().setMonth( new Date().getMonth() + 12)
+  },
+  gitId:{
+    type:String,
+    default:null
   },
   subscription: {type: String, default: "Free",}
 });
