@@ -1,6 +1,5 @@
-const express = require("express");
-const Order = require("../models/order");
-const Product = require("../models/product");
+const Order = require("../models/orderModel");
+const Product = require("../models/productModel");
 const Payment = require("../models/payment");
 
 exports.createPaymentIntent = async (req, res) => {

@@ -130,21 +130,21 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 });
 });
 
-
-// app.post("/upload", upload.single("image"), async (req, res) => {
-//   const uploadResult = await cloudinary.uploader.upload(req.file.path);
-//   return res.json({
-//     success: true,
-//     file: uploadResult.secure_url,
-//   });
-// });
-
 // MongoDB setup
 connectDB();
 
 const PORT = process.env.PORT || 9092;
 
 app.listen(PORT, (err) =>
-  err ? console.log(err) : console.log(`server is running on PORT ${PORT}`)
+  err ? console.log(err) : console.log(` 
+------------------------------------------------------------------                                      
+ _____         _   _____         __ __ 
+| __  |___ ___| |_|  _  |___ ___|  |  |
+| __ -| .'|  _| '_|     | . | . |-   -|
+|_____|__,|___|_,_|__|__|  _|  _|__|__|
+                        |_| |_|        
+-------------------------------------------------------------------                                                                         
+                                                  
+server is running on PORT ${PORT}`)
 );
 console.log("Server is running on "+process.platform);
