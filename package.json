@@ -1,7 +1,7 @@
 {
   "name": "backappx",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "this package is related to back end of BackAppx project",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YosriZaghouani21/BackAPPX.git"
+    "url": "git+https://github.com/BackAppX/BackAppX-Platform"
   },
   "keywords": [
     "heroku"
@@ -47,9 +47,9 @@
     "web-push": "^3.5.0"
   },
   "bugs": {
-    "url": "https://github.com/YosriZaghouani21/BackAPPX/issues"
+    "url": "https://github.com/BackAppX/BackAppX-Platform/issues"
   },
-  "homepage": "https://github.com/YosriZaghouani21/BackAPPX#readme",
+  "homepage": "https://github.com/BackAppX/BackAppX-Platform#readme",
   "devDependencies": {
     "nodemon": "^2.0.20",
     "prettier": "^2.8.4",

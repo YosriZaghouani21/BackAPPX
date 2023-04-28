@@ -6,8 +6,6 @@ const login = require("../../routes/login");
 const orders = require("../../routes/orders");
 const stripe = require("../../routes/stripe");
 
-const products = require("./products");
-
 const app = express();
 
 require("dotenv").config();
@@ -21,15 +19,11 @@ app.use("/api/orders", orders);
 app.use("/api/stripe", stripe);
 
 app.get("/", (req, res) => {
-  res.send("Welcome our to payment API...");
-});
-
-app.get("/products", (req, res) => {
-  res.send(products);
+  res.send("Welcome our to auto generated payment API by backappx...");
 });
 
 const uri = process.env.DB_URI;
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Server running on port: ${port}...`);
