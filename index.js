@@ -9,10 +9,14 @@ const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
 const apiGeneratorRoutes = require("./services/apiGenerator");
-
-
+const categoryRoutes = require("./routes/categoryRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
+
+const cookieSession = require("cookie-session");
+const session = require('express-session');
+const passport = require("passport");
+
 
 const paymeeRoutes = require("./routes/paymentService");
 
@@ -66,6 +70,19 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
+
+// Configure session middleware
+app.use(
+  session({
+    secret:"6IxSeexDeadxPeople9",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());                  
+app.use(passport.session());
+
 //Routes path
 app.use("/user", userRoutes);
 
@@ -80,6 +97,7 @@ app.use("/payment", stripeRoutes);
 app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
 app.use("/product", productRoutes);
+app.use("/category", categoryRoutes);
 app.use("/order", orderRoutes);
 app.use("/paymentService", paymeeRoutes);
 app.use("/email", emailServiceRoutes);

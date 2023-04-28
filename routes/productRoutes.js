@@ -1,18 +1,18 @@
 const express = require("express");
-const {
-  GetProduct,
-  addProduct,
-  getSingleProduct,
-  UpdateProduct,
-  DeleteProduct,
-} = require("../controllers/product");
 
-const router = express.Router();
+const { registerRules, validator } = require("../middlewares/validator.js");
+const isAuth = require("../middlewares/passport-setup.js");
+const { createPoduct } = require("../controllers/productController.js");
+const { allProducts } = require("../controllers/productController.js");
+const { deleteProduct } = require("../controllers/productController.js");
+const { updateProduct } = require("../controllers/productController.js");
 
-router.get("/products", GetProduct);
-router.get("/:productId", getSingleProduct);
-router.patch("/:productId", UpdateProduct);
-router.delete("/:productId", DeleteProduct);
-router.post("/Addproduct", addProduct);
+const uploader = require("../uploads/multer");
+const Router = express.Router();
 
-module.exports = router;
+Router.post("/product", uploader.single("image"), createPoduct);
+Router.get("/getallproduct", allProducts);
+Router.delete("/product/:id", deleteProduct);
+Router.put("/updateProduct/:id", updateProduct);
+
+module.exports = Router;

@@ -1077,8 +1077,9 @@ exports.uploadImage = async (req, res) => {
   if (req.file && req.file.path) {
     const fileUrl = path.basename(req.file.path);
     console.log("image path",fileUrl)
+    const fullFileUrl = `http://localhost:9092/user/image/${userId}/${fileUrl}`
     const updatedUser = await User.findByIdAndUpdate(userId, {
-      image: fileUrl
+      image: fullFileUrl
     });
 
     return res.json({
