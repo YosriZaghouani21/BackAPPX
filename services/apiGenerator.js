@@ -6,17 +6,18 @@ const exec = promisify(require('child_process').exec);
 // generate the api in the api-generator folder
 router.post("/", async (req, res) => {
     const api_type = req.body.api_type;
+    const user_id = req.body.user_id;
     let api_generator_name = ''
     try {
-        if (!fs.existsSync('./api-generator/api')) {
+        if (!fs.existsSync(`./api-generator/api_${user_id}`)) {
             // Create the api directory
-            fs.mkdirSync('./api-generator/api');
+            fs.mkdirSync(`./api-generator/api_${user_id}`);
             console.log('API directory created successfully!');
         }
         else {
-            fs.rmdirSync('./api-generator/api', { recursive: true });
+            fs.rmdirSync(`./api-generator/api_${user_id}`, { recursive: true });
             console.log('API directory deleted successfully!');
-            fs.mkdirSync('./api-generator/api');
+            fs.mkdirSync(`./api-generator/api_${user_id}`);
             console.log('API directory created successfully!');
         }
 
@@ -38,7 +39,7 @@ router.post("/", async (req, res) => {
 
         // Execute each command in the api-generator folder
         const promises = commands.map((command) => {
-            return exec(command, { cwd: './api-generator/api' });
+            return exec(command, { cwd: `./api-generator/api_${user_id}` });
         });
         await Promise.all(promises);
 
@@ -68,14 +69,14 @@ router.post("/push", async (req, res) => {
 
         // Execute each command in the api-generator folder
         const promises = commands.map((command) => {
-            return exec(command, { cwd: './api-generator/api' });
+            return exec(command, { cwd: `./api-generator/api_${user_id}` });
         });
         await Promise.all(promises);
-        await exec(`git commit -m "Initial commit"`, { cwd: './api-generator/api' });
-        await exec(`git remote add origin ${git_url} `, { cwd: './api-generator/api' });
-        await exec(`git push -u origin main`, { cwd: './api-generator/api' });
+        await exec(`git commit -m "Initial commit"`, { cwd: `./api-generator/api_${user_id}` });
+        await exec(`git remote add origin ${git_url} `, { cwd: `./api-generator/api_${user_id}` });
+        await exec(`git push -u origin main`, { cwd: `./api-generator/api_${user_id}` });
         res.send('Git commands executed successfully!');
-        await fs.rmdirSync('./api-generator/api', { recursive: true });
+        await fs.rmdirSync(`./api-generator/api_${user_id}`, { recursive: true });
 
     } catch (err) {
         console.error(`Error: ${err}`);
