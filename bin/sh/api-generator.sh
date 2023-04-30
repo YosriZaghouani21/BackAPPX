@@ -1,13 +1,8 @@
-#!/bin/bash
-/d/SIM_ESPRIT/PIM/website-back/
-mkdir controllers
-mkdir uploads
-cp /mnt/d/SIM_ESPRIT/PIM/website-back/index.js server.js
-cp /mnt/d/SIM_ESPRIT/PIM/website-back/package.json package.json
-rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/d/SIM_ESPRIT/PIM/website-back/routes routes
-rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/d/SIM_ESPRIT/PIM/website-back/models models
-rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/d/SIM_ESPRIT/PIM/website-back/middlewares middlewares
-echo "node_modules" >> .gitignore
-echo ".idea" >> .gitignore
-echo "PORT=your_port" >> .env
-echo "MONGO_URI=your_mongo_uri" >> .env
+# Initialize Git in your project directory (if you haven't already)
+git init
+# Add your files to the staging area
+git branch -M main
+# Gitignore
+cp /c/Users/karam/Documents/GitHub/BackAPPX/api-generator/common/.gitignore .gitignore
+# Add your changes to the staging area
+git add .
