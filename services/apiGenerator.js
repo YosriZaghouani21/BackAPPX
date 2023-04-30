@@ -117,6 +117,20 @@ router.post("/deploy", async (req, res) => {
     }
 });
 
+// Restart the api
+router.post("/restart", async (req, res) => {
+    const {user_id} = req.body;
+    try {
+        await exec(`pm2 restart index.js`, {cwd: `./api-generator/api_${user_id}`});
+        console.log(`Server for user ${user_id} restarted successfully!`);
+        res.send(`API restarted successfully for user: ${user_id}`);
+    }
+    catch (err) {
+        console.error(`Error: ${err}`);
+        res.status(500).send('Error executing API commands '+err);
+    }
+});
+
 // Stop the api
 router.post("/stop", async (req, res) => {
     const {user_id} = req.body;
