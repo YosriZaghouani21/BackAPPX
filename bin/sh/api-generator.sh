@@ -1,13 +1,8 @@
-#!/bin/bash
-
-mkdir controllers
-mkdir uploads
-cp /mnt/c/Users/karam/Documents/GitHub/BackAPPX/index.js server.js
-cp /mnt/c/Users/karam/Documents/GitHub/BackAPPX/package.json package.json
-rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/c/Users/karam/Documents/GitHub/BackAPPX/routes routes
-rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/c/Users/karam/Documents/GitHub/BackAPPX/models models
-rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/c/Users/karam/Documents/GitHub/BackAPPX/middlewares middlewares
-echo "node_modules" >> .gitignore
-echo ".idea" >> .gitignore
-echo "PORT=your_port" >> .env
-echo "MONGO_URI=your_mongo_uri" >> .env
+# Initialize Git in your project directory (if you haven't already)
+git init
+# Add your files to the staging area
+git branch -M main
+# Gitignore
+cp /c/Users/karam/Documents/GitHub/BackAPPX/api-generator/common/.gitignore .gitignore
+# Add your changes to the staging area
+git add .
