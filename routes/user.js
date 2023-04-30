@@ -68,7 +68,6 @@ passport.use(
           callbackURL: "/user/github/callback"
       },
       async(accessToken,refreshToken,profile,cb)=>{
-
           const user = await User.findOne({
               gitId: profile.id,
               provider:'github'
@@ -80,6 +79,7 @@ passport.use(
                   name: profile._json.login,
                   email: profile._json.email,
                   image: profile._json.avatar_url,
+                  githubUsername:profile._json.login,
                   provider:'github'
               });
               await newUser.save();
@@ -88,7 +88,6 @@ passport.use(
               console.log('Github user already exist in DB..');
               return cb(null,user);
           } 
-          console.log(profile);
       }
     
   )
@@ -200,10 +199,11 @@ Router.get(
       name: req.user.name,
       email: req.user.email,
       image: req.user.image,
+      githubUsername:req.user.githubUsername
     };
 
     token = await jwt.sign(payload, secretOrkey);
-    provider = "gitlab"
+    provider = req.user.provider
     res.redirect(`${CLIENT_URL}loading`)
   } catch (error) {
     res.status(500).json({ errors: error.message });

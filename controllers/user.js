@@ -132,7 +132,9 @@ exports.login = async (req, res) => {
       name: user.name,
       email: user.email,
       phoneNumber: user.phoneNumber,
-      image: user.image  
+      image: user.image,
+      githubUsername:user.githubUsername,
+      provider:user.provider
     };
 
     const token = await jwt.sign(payload, secretOrkey);

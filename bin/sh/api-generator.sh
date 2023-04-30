@@ -1,12 +1,12 @@
 #!/bin/bash
-
+/d/SIM_ESPRIT/PIM/website-back/
 mkdir controllers
 mkdir uploads
-cp /mnt/c/Users/karam/Documents/GitHub/BackAPPX/index.js server.js
-cp /mnt/c/Users/karam/Documents/GitHub/BackAPPX/package.json package.json
-rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/c/Users/karam/Documents/GitHub/BackAPPX/routes routes
-rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/c/Users/karam/Documents/GitHub/BackAPPX/models models
-rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/c/Users/karam/Documents/GitHub/BackAPPX/middlewares middlewares
+cp /mnt/d/SIM_ESPRIT/PIM/website-back/index.js server.js
+cp /mnt/d/SIM_ESPRIT/PIM/website-back/package.json package.json
+rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/d/SIM_ESPRIT/PIM/website-back/routes routes
+rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/d/SIM_ESPRIT/PIM/website-back/models models
+rsync -avz --exclude='node_modules' --exclude='.idea' /mnt/d/SIM_ESPRIT/PIM/website-back/middlewares middlewares
 echo "node_modules" >> .gitignore
 echo ".idea" >> .gitignore
 echo "PORT=your_port" >> .env
