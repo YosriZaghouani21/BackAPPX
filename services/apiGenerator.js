@@ -108,12 +108,15 @@ router.post("/deploy", async (req, res) => {
         }
         // Start the api server
         await exec(`pm2 start index.js -f`, { cwd: `./api-generator/api_${user_id}` });
-        res.send(`API deployed successfully for user: ${user_id} on port: ${user_port}, on database: ${user_database}`);
+        res.status(200).json( {port: user_port,
+                database: user_database,
+                message: `API deployed successfully for user: ${user_id}`}
+        );
 
     }
     catch (err) {
         console.error(`${err}`);
-        res.status(500).send('Error executing API commands '+err);
+        res.status(500).json('Error executing API commands '+err);
     }
 });
 
@@ -127,7 +130,7 @@ router.post("/restart", async (req, res) => {
     }
     catch (err) {
         console.error(`Error: ${err}`);
-        res.status(500).send('Error executing API commands '+err);
+        res.status(500).json('Error executing API commands '+err);
     }
 });
 
@@ -153,11 +156,11 @@ router.post("/delete", async (req, res) => {
         await exec(`pm2 stop index.js`, {cwd: `./api-generator/api_${user_id}`});
         // Delete the api-generator folder
         fs.rmdirSync(`./api-generator/api_${user_id}`, { recursive: true });
-        res.send(`API deleted successfully for user: ${user_id}`);
+        res.send(`API deleted successfully for user: ${user_id}`,);
     }
     catch (err) {
         console.error(`Error: ${err}`);
-        res.status(500).send('Error executing API commands '+err);
+        res.status(500).send('Error executing API commands '+err,);
     }
 });
 
