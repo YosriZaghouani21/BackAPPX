@@ -1,10 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const register = require("../../routes/register");
-const login = require("../../routes/login");
-const orders = require("../../routes/orders");
-const stripe = require("../../routes/stripe");
+const register = require("./routes/register");
+const login = require("./routes/login");
+const orders = require("./routes/orders");
+const stripe = require("./routes/stripe");
 
 const app = express();
 

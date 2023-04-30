@@ -2,7 +2,6 @@ REM Files
 copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\payment_api\index.js index.js
 copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\payment_api\package.json package.json
 copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\payment_api\README.md README.md
-copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\payment_api\.env .env
 REM Folders
 xcopy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\middleware middleware /E /I /Y
 xcopy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\models models /E /I /Y

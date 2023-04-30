@@ -2,7 +2,6 @@ REM Files
 copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\crud_api\index.js index.js
 copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\crud_api\package.json package.json
 copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\crud_api\README.md README.md
-copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\crud_api\.env .env
 REM Folders
 xcopy /E /I /Y C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\middleware middleware
 xcopy /E /I /Y C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\utils utils
