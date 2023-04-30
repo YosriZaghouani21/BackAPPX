@@ -1,14 +1,17 @@
 const router = require('express').Router();
 const fs = require('fs');
 const { promisify } = require('util');
+const User = require('../models/User');
 const exec = promisify(require('child_process').exec);
 const users_ports = []
 
 // generate the api in the api-generator folder
 router.post("/", async (req, res) => {
-    const api_type = req.body.api_type;
-    const user_id = req.body.user_id;
+    const {api_type,userId} = req.body;
     let api_generator_name = ''
+    user = await User.findById(userId)
+    console.log("this is the apiGen",user.apiGen)
+    apiGen = user.apiGen
     try {
         if (!fs.existsSync(`./api-generator/api_${user_id}`)) {
             // Create the api directory
@@ -24,8 +27,26 @@ router.post("/", async (req, res) => {
 
         if (api_type !== 'crud') {
             api_generator_name = 'payment-api-generator';
+            if (apiGen == 1){
+                user.apiGen = 3
+               await user.save() 
+                console.log("apiGen updated",user.apiGen)
+            }else if(apiGen ==0){
+                user.apiGen =2
+                await user.save() 
+                console.log("new crud apiGen added", user.apiGen)
+            }
         } else {
             api_generator_name = 'auth-api-generator';
+                if (apiGen == 2){
+                     user.apiGen = 3
+                    await user.save() 
+                    console.log("apiGen updated",user.apiGen)
+                }else if(apiGen ==0){
+                     user.apiGen =1
+                    await user.save() 
+                    console.log("new payment apiGen added", user.apiGen)
+                }
         }
 
         let commands = [];
@@ -54,7 +75,7 @@ router.post("/", async (req, res) => {
 
 // Push the api to a git repository
 router.post("/push", async (req, res) => {
-    const {username, repository,token,user_id} = req.body;
+    const {username, repository,token,userId} = req.body;
     const git_url = `https://${username}:${token}@github.com/${username}/${repository}.git`;
     try {
         let commands;
@@ -73,11 +94,12 @@ router.post("/push", async (req, res) => {
             return exec(command, { cwd: `./api-generator/api_${user_id}` });
         });
         await Promise.all(promises);
-        await exec(`git commit -m "Initial commit"`, { cwd: `./api-generator/api_${user_id}` });
-        await exec(`git remote add origin ${git_url} `, { cwd: `./api-generator/api_${user_id}` });
+        await exec(`git commit -m "Initial commit"`, { cwd: './api-generator/api' }); 
+        await exec(`git remote add origin ${git_url} `, { cwd: './api-generator/api' });
         await exec(`git push -u origin main --force`, { cwd: `./api-generator/api_${user_id}` });
         res.send('Git commands executed successfully!');
-
+        await fs.rmdirSync('./api-generator/api', { recursive: true });
+        await User.updateOne({ _id: userId }, { apiGen: 0 })
     } catch (err) {
         console.error(`Error: ${err}`);
         // Remove the .git folder

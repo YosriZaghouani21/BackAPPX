@@ -56,6 +56,15 @@ const userSchema = mongoose.Schema({
     type:String,
     default:null
   },
+  githubUsername:{
+    type:String,
+    default:null
+  },
+  apiGen:{
+    type:Number,
+    enum:[0,1,2,3],
+    default:0
+  },
   subscription: {type: String, default: "Free",}
 });
 
