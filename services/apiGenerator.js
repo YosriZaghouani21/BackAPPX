@@ -141,6 +141,7 @@ router.post("/stop", async (req, res) => {
         await exec(`pm2 stop index.js`, {cwd: `./api-generator/api_${user_id}`});
         console.log(`Server for user ${user_id} stopped successfully!`);
         res.send(`API stopped successfully for user: ${user_id}`);
+        deallocatePort(user_id);
     }
     catch (err) {
         console.error(`Error: ${err}`);
@@ -152,15 +153,22 @@ router.post("/stop", async (req, res) => {
 router.post("/delete", async (req, res) => {
     const {user_id} = req.body;
     try {
+        // Check if the api directory exists
+        if (!fs.existsSync(`./api-generator/api_${user_id}`)) {
+            res.status(500).send('API directory not found!');
+        }
         // Stop the api server
         await exec(`pm2 stop index.js`, {cwd: `./api-generator/api_${user_id}`});
-        // Delete the api-generator folder
-        fs.rmdirSync(`./api-generator/api_${user_id}`, { recursive: true });
-        res.send(`API deleted successfully for user: ${user_id}`,);
+        // Add a delay of 1 second before removing the directory
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Delete the api directory
+        await fs.promises.rm(`./api-generator/api_${user_id}`, { recursive: true });
+        // Remove the user_id and the port from the array
+        deallocatePort(user_id);
     }
     catch (err) {
         console.error(`Error: ${err}`);
-        res.status(500).send('Error executing API commands '+err,);
+        res.status(500).send('Error executing API commands '+err);
     }
 });
 
@@ -181,6 +189,13 @@ function allocatePort(user_id) {
         }
         users_ports.push({ user_id: user_id, port: port + 1 });
         return port + 1;
+    }
+}
+function deallocatePort(user_id) {
+    for (let i = 0; i < users_ports.length; i++) {
+        if (users_ports[i].user_id === user_id) {
+            users_ports.splice(i, 1);
+        }
     }
 }
 
