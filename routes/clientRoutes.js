@@ -15,6 +15,7 @@ const {
     forgotPassword,
     clientresetPassword,
     loginclient,
+    logoutclient
 } = require("../controllers/clientController.js");
 //const isAuth = require("../middleware/passport-setup.js");
 
@@ -30,5 +31,6 @@ Router.put("/uploadPhotoClient/:id",  uploader.single("image"), uploadPhotoToCli
 Router.put("/clientforgot-password", forgotPassword);
 Router.put("/clientresetpassword", clientresetPassword);
 Router.post("/login", loginclient);
+Router.post("/logout", logoutclient);
 
 module.exports = Router;

@@ -65,6 +65,7 @@ exports.getSingleProject = async (req, res) => {
     const project = await Project.findById(req.params.id);
     res.status(200).json({ project });
   } catch (err) {
-    return res.status(500).json({ msg: err.message });
+    console.log(err);
+     res.status(500).json({ msg: err.message });
   }
 };

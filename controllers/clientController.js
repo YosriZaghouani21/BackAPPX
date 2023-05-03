@@ -1,4 +1,5 @@
 const Client = require("../models/clientModel.js");
+const Session = require("../models/sessionModel.js");
 const Project = require("../models/projectModel.js");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
@@ -857,7 +858,7 @@ exports.clientresetPassword = async (req, res) => {
 
 
 exports.loginclient = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password,reference } = req.body;
   try {
     const client = await Client.findOne({ email });
     if (!client)
@@ -872,8 +873,16 @@ exports.loginclient = async (req, res) => {
       email: client.email,
       phoneNumber: client.phoneNumber,
     };
+
+    
   
     const token = await jwt.sign(payload, secretOrkey);
+    const userId = client._id
+    const newSession = new Session({
+      reference,
+      userId,
+      });
+    await newSession.save();
       return res.status(200).json({ token: `Bearer ${token}`, client });
    }
    
@@ -882,3 +891,14 @@ exports.loginclient = async (req, res) => {
   }
 };
 
+
+exports.logoutclient = async (req, res) => {
+  const { id,reference } = req.body;
+  Session.findOneAndDelete({ userId: req.body.userId }, function(err) {
+    if (err) {
+      return res.status(500).json({ msg: err.message });
+    } else {
+      res.json({ msg: "logged out" });
+    }
+  })
+};
