@@ -8,6 +8,7 @@ const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
 const clientRoutes = require("./routes/clientRoutes.js");
 const categoryRoutes = require("./routes/categoryRoutes.js");
+const messageController = require("./controllers/messageController")
 const productRoutes = require("./routes/productRoutes.js");
 const statsRoutes = require("./routes/statRoutes.js");
 const reclamationRoutes = require("./routes/reclamationRoutes");
@@ -51,6 +52,12 @@ io.on('connection', (socket) => {
     console.log(`Message reçu : ${data}`);
     // Envoi du message "hello" à tous les clients connectés
     io.emit('hello', data);
+  });
+
+  socket.on('message',(message)=> {
+    messageController.send(message)
+    io.emit('message',message)
+    console.log("message sent!");
   });
 });
 

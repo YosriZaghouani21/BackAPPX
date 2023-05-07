@@ -17,6 +17,21 @@ exports.sendMessage = async (req, res) => {
   }
 };
 
+exports.send = (message) =>{
+  const { senderId, reclamtionId,content } = message;
+  try {
+    const newMessage = new Message({
+        senderId,
+        reclamtionId,
+        content
+      });
+    newMessage.save();
+    console.log("message saved");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 
 // Get all Reclamations
@@ -29,7 +44,4 @@ exports.allMessagesByReclamationId= async (req, res) => {
       res.status(500).json({ error: err });
     });
 };
-
-
-
 
