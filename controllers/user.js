@@ -134,7 +134,8 @@ exports.login = async (req, res) => {
       phoneNumber: user.phoneNumber,
       image: user.image,
       githubUsername:user.githubUsername,
-      provider:user.provider
+      provider:user.provider,
+      role:user.Role
     };
 
     const token = await jwt.sign(payload, secretOrkey);

@@ -14,6 +14,10 @@ const categorySchema = mongoose.Schema({
     type: Date,
     default: new Date(),
   },
+  project: {
+    type: ObjectId,
+    ref: "project",
+  },
   Products: [
     {
       type: ObjectId,

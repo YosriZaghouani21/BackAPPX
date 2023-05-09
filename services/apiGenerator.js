@@ -99,7 +99,7 @@ router.post("/push", async (req, res) => {
         await exec(`git commit -m "Initial commit"`, { cwd: `./api-generator/api_${user_id}` }); 
         await exec(`git remote add origin ${git_url} `, { cwd: `./api-generator/api_${user_id}` });
         await exec(`git push -u origin main --force`, { cwd: `./api-generator/api_${user_id}` });
-        res.send('Git commands executed successfully!');
+        res.send({message:'Git commands executed successfully!'});
         user = await User.findById(user_id);
 /* 
         if (user.apiGen == 1){
