@@ -3,6 +3,8 @@ const Category = require("../models/categoryModel");
 const cloudinary = require("../uploads/cloudinary");
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
+const Project = require("../models/projectModel.js");
+const Order = require("../models/orderModel.js");
 
 const storage = new CloudinaryStorage({
   cloudinary,
@@ -14,22 +16,64 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-// create Poduct
-exports.createPoduct = async (req, res) => {
-  const { name, description, price, quantity, category, reference } = req.body;
+// // create Poduct
+// exports.createPoduct = async (req, res) => {
+//   const { name, description, price, quantity, category, reference } = req.body;
+//   const image = await cloudinary.v2.uploader.upload(req.file.path);
+//   try {
+//     const newPoduct = new Product({
+//       name,
+//       reference,
+//       description,
+//       image,
+//       price,
+//       quantity,
+//       category
+//     });
+//     await newPoduct.save();
+//     res.status(201).json(newPoduct);
+//   } catch (error) {
+//     res.status(500).json({ errors: error });
+//   }
+// };
+
+
+exports.createProduct = async (req, res) => {
+  const { name, description, price, quantity, category, reference, project } = req.body;
   const image = await cloudinary.v2.uploader.upload(req.file.path);
   try {
-    const newPoduct = new Product({
+    // Create a new product
+    const newProduct = new Product({
       name,
       reference,
       description,
       image,
       price,
       quantity,
-      category
+      category,
+      project
     });
-    await newPoduct.save();
-    res.status(201).json(newPoduct);
+    // Save the new product
+    await newProduct.save();
+    // Find the project by ID and update its products array with the new product
+    const updatedProject = await Project.findByIdAndUpdate(project, { $push: { products: newProduct } }, { new: true });
+    const updatedCategorie = await Category.findByIdAndUpdate(category, { $push: { Products: newProduct } }, { new: true });
+
+    res.status(201).json({ newProduct, updatedProject, updatedCategorie });
+  } catch (error) {
+    res.status(500).json({ errors: error });
+  }
+};
+
+
+exports.getAllProductsByProject = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    // Find all products with the matching project ID
+    const products = await Product.find({ project: projectId });
+
+    res.status(200).json({ products });
   } catch (error) {
     res.status(500).json({ errors: error });
   }
@@ -73,13 +117,62 @@ exports.allProducts = async (req, res) => {
     });
 };
 
-//Delete a product
 exports.deleteProduct = async (req, res) => {
   try {
-    await Product.findByIdAndDelete(req.params.id);
-    res.json({ msg: "projet supprimé avec succès" });
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+
+    // Delete the product from the category
+    await Category.updateMany(
+      { _id: { $in: product.category } },
+      { $pull: { products: productId } }
+    );
+
+    // Delete the product from the project
+    await Project.updateMany(
+      { _id: { $in: product.project } },
+      { $pull: { products: productId } }
+    );
+
+    // Delete the product itself
+    await Product.findByIdAndDelete(productId);
+
+    res.json({ msg: "Product deleted successfully" });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
+  }
+};
+
+exports.deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    await Category.updateMany(
+      { Products: id },
+      { $pull: { Products: id } }
+    );
+
+    await Project.updateMany(
+      { products: id },
+      { $pull: { products: id } }
+    );
+
+    // Find and delete the orders that contain the product being deleted
+    const orders = await Order.find({ "products.product": id });
+    for (let i = 0; i < orders.length; i++) {
+      const order = orders[i];
+      const updatedProducts = order.products.filter(
+        (product) => product.product.toString() !== id
+      );
+      order.products = updatedProducts;
+      await order.save();
+    }
+
+    res.status(200).json({ deletedProduct });
+  } catch (error) {
+    res.status(500).json({ error });
   }
 };
 

@@ -18,13 +18,30 @@ const projectSchema = mongoose.Schema({
     type: Date,
     default: new Date(),
   },
-  clients:[
+  clients: [
     {
       type: ObjectId,
       ref: "client",
     },
-
-  ]
+  ],
+  products: [
+    {
+      type: ObjectId,
+      ref: 'product',
+    },
+  ],
+  categories: [
+    {
+      type: ObjectId,
+      ref: "category",
+    },
+  ],
+  orders: [
+    {
+      type: ObjectId,
+      ref: "order",
+    },
+  ],
 });
 
 module.exports = Project = mongoose.model("project", projectSchema);

@@ -5,9 +5,9 @@ const cloudinary = require("../uploads/cloudinary");
 
 // create project
 exports.createProject = async (req, res) => {
-  const { name, description,bgColor } = req.body;
-/*   const image = await cloudinary.v2.uploader.upload(req.file.path);
- */
+  const { name, description, bgColor } = req.body;
+  /*   const image = await cloudinary.v2.uploader.upload(req.file.path);
+   */
   var crypto = require("crypto");
   var reference = crypto.randomBytes(30).toString("hex");
   console.log(reference.length);
@@ -17,12 +17,12 @@ exports.createProject = async (req, res) => {
       reference,
       description,
       bgColor,
-/*       image
- */
+      /*       image
+       */
     });
 
     await newProject.save();
-    res.status(201).json({status:"created",newProject});
+    res.status(201).json({ status: "created", newProject });
   } catch (error) {
     res.status(500).json({ errors: error.message });
   }
@@ -32,7 +32,7 @@ exports.createProject = async (req, res) => {
 exports.updateProject = async (req, res) => {
   Project.findByIdAndUpdate(req.params.id, req.body)
     .then((doc2) => {
-      res.status(200).json({status:"updated",doc2});
+      res.status(200).json({ status: "updated", doc2 });
     })
     .catch((err) => {
       res.status(500).json({ error: err });
@@ -54,11 +54,12 @@ exports.allProjects = async (req, res) => {
 exports.deleteProject = async (req, res) => {
   try {
     await Project.findByIdAndDelete(req.params.id);
-    res.json({ status:"deleted",msg: "projet supprimé avec succès" });
+    res.json({ status: "deleted", msg: "projet supprimé avec succès" });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
 };
+
 
 //Get Project with id
 exports.getSingleProject = async (req, res) => {
@@ -67,5 +68,7 @@ exports.getSingleProject = async (req, res) => {
     res.status(200).json({ project });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
+    console.log(err);
+    res.status(500).json({ msg: err.message });
   }
 };

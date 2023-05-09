@@ -4,8 +4,12 @@ const { ObjectId } = mongoose.Schema.Types;
 
 const categorySchema = mongoose.Schema({
   name: String,
-  description:String,
+  description: String,
   reference: String,
+  project: {
+    type: ObjectId,
+    ref: "project",
+  },
   image: {
     public_id: { type: String },
     url: { type: String },

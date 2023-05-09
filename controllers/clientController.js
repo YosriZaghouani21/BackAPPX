@@ -1,4 +1,5 @@
 const Client = require("../models/clientModel.js");
+const Session = require("../models/sessionModel.js");
 const Project = require("../models/projectModel.js");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
@@ -12,11 +13,11 @@ const Client_URL = config.get("Client_URL");
 
 // create client
 exports.createClient = async (req, res) => {
-  const { name, familyName,email,phoneNumber,reference,password } = req.body;
-  const fullName = name +" "+familyName;
+  const { name, familyName, email, phoneNumber, reference, password } = req.body;
+  const fullName = name + " " + familyName;
   try {
 
-    const searchRes = await Client.findOne({ email,reference });
+    const searchRes = await Client.findOne({ email, reference });
     if (searchRes)
       return res
         .status(401)
@@ -35,17 +36,17 @@ exports.createClient = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     newClient.password = hash;
-   
+
     //Project.find
-    
+
 
     const data = {
       fullName: fullName,
     };
-   
+
 
     await newClient.save();
-    
+
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
@@ -60,12 +61,12 @@ exports.createClient = async (req, res) => {
     });
 
     // send mail with defined transport object
-  let info = await transporter.sendMail({
+    let info = await transporter.sendMail({
       from: 'BackAppX', // sender address
-    to: email, // list of receivers
-    subject: "Welcome ✔", // Subject line
-    text: "Welcome"+fullName, // plain text body
-    html:`<html>
+      to: email, // list of receivers
+      subject: "Welcome ✔", // Subject line
+      text: "Welcome" + fullName, // plain text body
+      html: `<html>
     <head>
     
       <meta charset="utf-8">
@@ -242,7 +243,7 @@ exports.createClient = async (req, res) => {
               <!-- start copy -->
               <tr>
                 <td bgcolor="#ffffff" align="left" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                  <h1 style="margin: 0 0 12px; font-size: 32px; font-weight: 400; line-height: 48px;">Welcome, `+fullName+
+                  <h1 style="margin: 0 0 12px; font-size: 32px; font-weight: 400; line-height: 48px;">Welcome, `+ fullName +
         `</h1>
                   <p style="margin: 0;">Thank you for signing up with Paste. We strive to produce high quality email templates that you can use for your transactional or marketing needs.</p>
                 </td>
@@ -317,10 +318,10 @@ exports.createClient = async (req, res) => {
     
     </body>
     </html>`
-//    html: "<b>Let's begin</b>", // html body
-  });
+      //    html: "<b>Let's begin</b>", // html body
+    });
 
-  res.status(201).json({status:"created",newClient});
+    res.status(201).json({ status: "created", newClient });
   } catch (error) {
     res.status(500).json({ errors: error });
   }
@@ -331,21 +332,21 @@ exports.createClient = async (req, res) => {
 // Update client
 exports.updateClient = async (req, res) => {
   try {
-    const { name, familyName,fullName, email,phoneNumber,password,reference,image } = req.body;
+    const { name, familyName, fullName, email, phoneNumber, password, reference, image } = req.body;
 
     const updatedClient = await Client.findByIdAndUpdate(req.params.id, {
-       name,
-       familyName,
-       fullName,
-       email,
-       phoneNumber,
-       password,
-       reference,
-       image
+      name,
+      familyName,
+      fullName,
+      email,
+      phoneNumber,
+      password,
+      reference,
+      image
     });
 
     return res.status(201).json({
-      status:"updated",
+      status: "updated",
       msg: "Le client a été modifié avec succès",
       user: updatedClient,
     });
@@ -357,30 +358,30 @@ exports.updateClient = async (req, res) => {
 
 // Get all clients
 exports.allClients = async (req, res) => {
-    Client.find({})
-    .then(docs =>{
-    res.status(200).json(docs)
-   })
-   .catch(err => {
-    res.status(500).json({error:err})
-   }) 
+  Client.find({})
+    .then(docs => {
+      res.status(200).json(docs)
+    })
+    .catch(err => {
+      res.status(500).json({ error: err })
+    })
 };
 
 exports.allClientsByProjectReference = async (req, res) => {
-    Client.find({"reference":req.params.reference})
+  Client.find({ "reference": req.params.reference })
     .then(doc => {
-        res.status(200).json(doc)
+      res.status(200).json(doc)
     })
     .catch(err => {
-        res.status(500).json({error : err})
+      res.status(500).json({ error: err })
     })
 };
 //Delete a client 
 exports.deleteClient = async (req, res) => {
   try {
     await Client.findByIdAndDelete(req.params.id);
-    res.json({status:"deleted",msg: "client supprimé avec succès" });
-  } catch (err) {                                      
+    res.json({ status: "deleted", msg: "client supprimé avec succès" });
+  } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
 };
@@ -389,7 +390,7 @@ exports.deleteClient = async (req, res) => {
 exports.getSingleClient = async (req, res) => {
   try {
     const client = await Client.findById(req.params.id);
-    res.status(200).json({client});
+    res.status(200).json({ client });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
@@ -860,27 +861,33 @@ exports.clientresetPassword = async (req, res) => {
 
 
 exports.loginclient = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, reference } = req.body;
   try {
     const client = await Client.findOne({ email });
-    if (!client)
-      return res.status(404).json({ msg: `Email incorrect` });
-    const isMatch = await bcrypt.compare(password, client.password);
-    if (!isMatch)
-      return res.status(401).json({ msg: `Email ou mot de passe incorrect` });
-   else{
-    const payload = {
-      id: client._id,
-      name: client.name,
-      email: client.email,
-      phoneNumber: client.phoneNumber,
-    };
-  
+
+
     const token = await jwt.sign(payload, secretOrkey);
-      return res.status(200).json({ token: `Bearer ${token}`, client });
-   }
-   
-  } catch (error) {
-    res.status(500).json({ errors: error });
+    const userId = client._id
+    const newSession = new Session({
+      reference,
+      userId,
+    });
+    await newSession.save();
+    return res.status(200).json({ token: `Bearer ${token}`, client });
+  } catch {
+    return res.status(401).json({ error: "Invalid or missing reset link" });
   }
+
+};
+
+
+exports.logoutclient = async (req, res) => {
+  const { id, reference } = req.body;
+  Session.findOneAndDelete({ userId: req.body.userId }, function (err) {
+    if (err) {
+      return res.status(500).json({ msg: err.message });
+    } else {
+      res.json({ msg: "logged out" });
+    }
+  })
 };
