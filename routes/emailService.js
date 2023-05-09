@@ -11,6 +11,7 @@ Router.get("/", emailServiceController.findAllEmails);
 Router.get("/:id", emailServiceController.findOneEmail);
 Router.put("/:id", emailServiceController.updateEmail);
 Router.delete("/:id", emailServiceController.deleteEmail);
+Router.get("/project/:id", emailServiceController.getEmailByProject);
 
 //SendEmail
 Router.post("/send/:id", emailServiceController.sendEmail);
