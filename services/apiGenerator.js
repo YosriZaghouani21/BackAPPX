@@ -5,6 +5,8 @@ const User = require('../models/User');
 const exec = promisify(require('child_process').exec);
 const users_ports = []
 
+
+
 // generate the api in the api-generator folder
 router.post("/", async (req, res) => {
     const {api_type,user_id} = req.body;
@@ -138,12 +140,15 @@ router.post("/deploy", async (req, res) => {
             console.log('env file created successfully!');
         }
         // Start the api server
-        await exec(`pm2 start index.js -f`, { cwd: `./api-generator/api_${user_id}` });
-        res.status(200).json( {port: user_port,
-                database: user_database,
-                message: `API deployed successfully for user: ${user_id}`}
-        );
 
+
+            await exec(`pm2 startOrReload index.js -f`, {cwd: `./api-generator/api_${user_id}`});
+            res.status(200).json({
+                    port: user_port,
+                    database: user_database,
+                    message: `API deployed successfully for user: ${user_id}`
+                }
+            );
     }
     catch (err) {
         console.error(`${err}`);
@@ -172,6 +177,7 @@ router.post("/stop", async (req, res) => {
         await exec(`pm2 stop index.js`, {cwd: `./api-generator/api_${user_id}`});
         console.log(`Server for user ${user_id} stopped successfully!`);
         res.send(`API stopped successfully for user: ${user_id}`);
+        deallocatePort(user_id);
     }
     catch (err) {
         console.error(`Error: ${err}`);
@@ -181,20 +187,33 @@ router.post("/stop", async (req, res) => {
 
 // Delete the api
 router.post("/delete", async (req, res) => {
-    const {user_id} = req.body;
-    try {
-        // Stop the api server
-        await exec(`pm2 stop index.js`, {cwd: `./api-generator/api_${user_id}`});
-        // Delete the api-generator folder
-        await fs.rmdirSync(`./api-generator/api_${user_id}`, { recursive: true });
-        res.send(`API deleted successfully for user: ${user_id}`,);
-        await User.updateOne({ _id: user_id }, { apiGen: 0 })
-    }
-    catch (err) {
-        console.error(`Error: ${err}`);
-        res.status(500).send('Error executing API commands '+err,);
-    }
-});
+        const {user_id} = req.body;
+        try {
+            // Check if the api directory exists
+            if (!fs.existsSync(`./api-generator/api_${user_id}`)) {
+                res.status(500).send('API directory not found!');
+            }
+            // Stop the api server
+            await exec(`pm2 stop index.js`, {cwd: `./api-generator/api_${user_id}`});
+            // Add a delay of 1 second before removing the directory
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Delete the api directory
+            fs.promises.rm(`./api-generator/api_${user_id}`, {recursive: true}, (err) => {
+                if (err) {
+                    console.error(`Error removing directory: ${err}`);
+                    res.status(500).send(`Error removing directory: ${err}`);
+                } else {
+                    console.log(`Directory ./api-generator/api_${user_id} removed successfully.`);
+                    // Remove the user_id and the port from the array
+                    deallocatePort(user_id);
+                    res.status(200).send(`Directory ./api-generator/api_${user_id} removed successfully.`);
+                }
+            });
+        } catch (err) {
+            console.error(`Error: ${err}`);
+            res.status(500).send('Error executing API commands ' + err);
+        }
+    });
 
 // Handle ports allocation for each user
 function allocatePort(user_id) {
@@ -215,5 +234,38 @@ function allocatePort(user_id) {
         return port + 1;
     }
 }
+// Deallocate the port for the user
+function deallocatePort(user_id) {
+    for (let i = 0; i < users_ports.length; i++) {
+        if (users_ports[i].user_id === user_id) {
+            users_ports.splice(i, 1);
+        }
+    }
+}
+// Handle server instance allocation for each user
+function serverIsDeployed(user_id) {
+    for (let i = 0; i < users_servers.length; i++) {
+        if (users_servers[i].user_id === user_id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// stop all the servers
+router.post("/stop-all", async (req, res) => {
+    try {
+        await exec(`pm2 stop all`);
+        console.log(`All servers stopped successfully!`);
+        res.send(`All servers stopped successfully!`);
+    }
+    catch (err) {
+        console.error(`Error: ${err}`);
+        res.status(500).send('Error executing API commands '+err);
+    }
+}
+);
+
+
 
 module.exports = router;
