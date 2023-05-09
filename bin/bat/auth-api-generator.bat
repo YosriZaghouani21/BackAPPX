@@ -1,7 +1,7 @@
 REM Files
-copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\crud_api\index.js index.js
-copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\crud_api\package.json package.json
-copy C:\Users\karam\Documents\GitHub\BackAPPX\api-generator\common\api_types\crud_api\README.md README.md
+copy D:\SIM_ESPRIT\PIM\website-back\api-generator\common\api_types\crud_api\index.js index.js
+copy D:\SIM_ESPRIT\PIM\website-back\api-generator\common\api_types\crud_api\package.json package.json
+copy D:\SIM_ESPRIT\PIM\website-back\api-generator\common\api_types\crud_api\README.md README.md
 REM Folders
 xcopy /E /I /Y D:\SIM_ESPRIT\PIM\website-back\api-generator\common\middleware middleware
 xcopy /E /I /Y D:\SIM_ESPRIT\PIM\website-back\api-generator\common\utils utils

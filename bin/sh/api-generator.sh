@@ -3,6 +3,6 @@ git init
 # Add your files to the staging area
 git branch -M main
 # Gitignore
-cp /c/Users/karam/Documents/GitHub/BackAPPX/api-generator/common/.gitignore .gitignore
+cp /d/SIM_ESPRIT/PIM/website-back/api-generator/common/.gitignore .gitignore
 # Add your changes to the staging area
 git add .

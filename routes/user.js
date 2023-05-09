@@ -23,7 +23,8 @@ const {
   blockUser,
   updateUserSubscription,
   uploadImage,
-  getImage
+  getImage,
+  updateUserGitCredentials
 } = require("../controllers/user.js");
 
 
@@ -37,6 +38,8 @@ const path = require("path");
 Router.post("/register", registerRules(), validator, register);
 Router.post("/login", login, authorizeRoles);
 Router.put("/profile/:id", updateUser);
+Router.put("/profileGit/:id", updateUserGitCredentials);
+
 Router.delete("/delete/:id", deleteUser);
 Router.put("/forgot-password", forgotPassword);
 Router.post("/userData", userData);
@@ -140,6 +143,7 @@ passport.deserializeUser((user, done) => {
 const CLIENT_URL = "http://localhost:3000/";
 var token =""
 var provider=""
+var firstLogin = false 
 
 Router.get("/login/success", (req, res) => {
   if (token !=""){
@@ -147,7 +151,8 @@ Router.get("/login/success", (req, res) => {
       success: true,
       message: "ok",
       token: token,
-      provider:provider
+      provider:provider,
+      firstLogin:firstLogin
     });
   }else{
     res.status(401).json({
@@ -201,9 +206,17 @@ Router.get(
       image: req.user.image,
       githubUsername:req.user.githubUsername
     };
-
+    
     token = await jwt.sign(payload, secretOrkey);
     provider = req.user.provider
+    
+    if (req.user.email == null){
+      firstLogin = true
+    }  else{
+      firstLogin = false
+    }
+  
+
     res.redirect(`${CLIENT_URL}loading`)
   } catch (error) {
     res.status(500).json({ errors: error.message });

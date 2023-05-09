@@ -62,7 +62,7 @@ const userSchema = mongoose.Schema({
   },
   apiGen:{
     type:Number,
-    enum:[0,1,2,3],
+    enum:[0,1,2,3,4],
     default:0
   },
   subscription: {type: String, default: "Free",}

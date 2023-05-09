@@ -170,16 +170,62 @@ exports.updateUser = async (req, res) => {
       phoneNumber,
     });
 
+    const payload = {
+      id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      phoneNumber: updatedUser.phoneNumber,
+      image: updatedUser.image,
+      githubUsername:updatedUser.githubUsername,
+      provider:updatedUser.provider
+    };
+
+    const token = await jwt.sign(payload, secretOrkey);
+    console.log("token",token)
+    console.log("updateUser",updatedUser)
     return res.status(201).json({
       status:"updated",
       msg: "L'utilisateur a été modifié avec succès",
       user: updatedUser,
+      token:token
     });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
 };
 
+// Update User
+exports.updateUserGitCredentials = async (req, res) => {
+  try {
+    const { githubUsername, gitId} = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+      githubUsername:githubUsername,
+      gitId:gitId
+    });
+    console.log(updatedUser);
+    const payload = {
+      id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      phoneNumber: updatedUser.phoneNumber,
+      image: updatedUser.image,
+      githubUsername:updatedUser.githubUsername,
+      provider:updatedUser.provider
+    };
+
+    const token = await jwt.sign(payload, secretOrkey);
+
+    return res.status(201).json({
+      status:"updated",
+      msg: "L'utilisateur a été modifié avec succès",
+      user: updatedUser,
+      token:token
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
 // Get all users
 exports.allUsers = async (req, res) => {
   try {
