@@ -44,7 +44,7 @@ exports.findOneEmail = async (req, res) => {
 // get email by project
 exports.getEmailByProject = async (req, res) => {
     try {
-        const emails = await Email.find({project:req.body.id});
+        const emails = await Email.find({project:req.params.id});
         return res.status(200).json(emails);
     }
     catch (err) {
