@@ -3,8 +3,6 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const register = require("./routes/register");
 const login = require("./routes/login");
-const orders = require("./routes/orders");
-const stripe = require("./routes/stripe");
 
 const app = express();
 
@@ -12,15 +10,13 @@ require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
-
 app.use("/api/register", register);
 app.use("/api/login", login);
-app.use("/api/orders", orders);
-app.use("/api/stripe", stripe);
 
 app.get("/", (req, res) => {
-  res.send("Welcome our to auto generated payment API by backappx...");
+  res.send("Welcome our to auto generated API by backappx...");
 });
+
 
 const uri = process.env.DB_URI;
 const port = process.env.PORT || 3000;
