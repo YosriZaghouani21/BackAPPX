@@ -34,8 +34,11 @@ You can set these environment variables in a `.env` file in the root directory o
 
 The application provides the following endpoints:
 
-- `GET /api/login`: Sign in a user
-- `POST /api/register`: Register a new user
+- `GET /api/register`: Create a new user
+- `POST /api/login`: Sign in
+- `GET /api/orders`: Get All orders
+- `POST /api/stripe`: Checkout with stripe
+
 
 ## Contributing
 

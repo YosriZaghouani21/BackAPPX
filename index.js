@@ -4,6 +4,10 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const connectDB = require("./config/dbConnect");
+
+const http = require("http");
+const messageController = require("./controllers/messageController");
+
 //routes declaration
 const userRoutes = require("./routes/user.js");
 const projectRoutes = require("./routes/projectroutes.js");
@@ -12,6 +16,8 @@ const apiGeneratorRoutes = require("./services/apiGenerator");
 const categoryRoutes = require("./routes/categoryRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
+const statsRoutes = require("./routes/statRoutes.js");
+const reclamationRoutes = require("./routes/reclamationRoutes");
 
 const cookieSession = require("cookie-session");
 const session = require('express-session');
@@ -41,7 +47,13 @@ mailingService
 //Basic Configuration
 const app = express();
 const port = process.env.PORT || 9092;
-
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methode: ["GET", "POST"],
+  },
+});
  //Swagger UI Documentation
  const options = {
   definition: {
@@ -93,6 +105,7 @@ app.use("/api-docs", swaggerUi.serve,
               "https://cdn.jsdelivr.net/npm/swagger-ui-themes@3.0.0/themes/3.x/theme-material.css",
         })
 );
+
 app.use("/payment", stripeRoutes);
 app.use("/project", projectRoutes);
 app.use("/client", clientRoutes);
@@ -103,7 +116,8 @@ app.use("/paymentService", paymeeRoutes);
 app.use("/email", emailServiceRoutes);
 app.use("/apiGenerator", apiGeneratorRoutes);
 // app.use("/push", pushNotificationRoutes);
-
+app.use("/stats", statsRoutes);
+app.use("/reclamation", reclamationRoutes);
 
 /* app.post("/upload", uploader.single("image "), async (req, res) => {
   const upload = await cloudinary.v2.uploader.upload(req.file.path); */
@@ -134,6 +148,21 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 connectDB();
 
 const PORT = process.env.PORT || 9092;
+
+io.on("connection", (socket) => {
+  console.log("Client connecté");
+  socket.on("hello", (data) => {
+    console.log(`Message reçu : ${data}`);
+    // Envoi du message "hello" à tous les clients connectés
+    io.emit("hello", data);
+  });
+
+  socket.on("message", (message) => {
+    messageController.send(message);
+    io.emit("message", message);
+    console.log("message sent!");
+  });
+});
 
 app.listen(PORT, (err) =>
   err ? console.log(err) : console.log(` 
