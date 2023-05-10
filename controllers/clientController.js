@@ -529,24 +529,65 @@ async function sendEmail(mailOptions) {
 }
 
 
-exports.loginclient = async (req, res) => {
-  const { email, password, reference } = req.body;
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const client = await Client.findOne({ email });
+    const user = await Client.findOne({ email });
+    if (!user)
+      return res.status(404).json({status:"email not found", msg: `Email ou mot de passe incorrect` });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
 
+      return res.status(401).json({ status:"password not found", msg: `Email ou mot de passe incorrect` });
+
+      if (!isSubValid(user))
+      return res.status(401).json({ msg: `Votre abonnement a expiré` });
+
+      let lastLogin = user.lastLogin;
+
+      user.lastLogin = new Date();
+      user.save();
+
+
+    const payload = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      image: user.image,
+      githubUsername:user.githubUsername,
+      provider:user.provider,
+      role:user.Role
+    };
 
     const token = await jwt.sign(payload, secretOrkey);
-    const userId = client._id
-    const newSession = new Session({
-      reference,
-      userId,
-    });
-    await newSession.save();
-    return res.status(200).json({ token: `Bearer ${token}`, client });
-  } catch {
-    return res.status(401).json({ error: "Invalid or missing reset link" });
-  }
+    return res.status(200).json({ status:"ok",lastLogin:lastLogin,token:token, user });
 
+  } catch (error) {
+    res.status(500).json({ errors: error.message });
+  }
+};exports.loginclient = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await Client.findOne({ email });
+    if (!user)
+      return res.status(404).json({status:"email not found", msg: `Email ou mot de passe incorrect` });
+    const isMatch = (password, user.password);
+    if (password != user.password)
+      return res.status(401).json({ status:"password not found", msg: `Email ou mot de passe incorrect` });
+
+    const payload = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+    };
+
+    const token = await jwt.sign(payload, secretOrkey);
+    return res.status(200).json({ status:"ok" });
+
+  } catch (error) {
+    res.status(500).json({ errors: error.message });
+  }
 };
 exports.logoutclient = async (req, res) => {
   const { id, reference } = req.body;

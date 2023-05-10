@@ -30,8 +30,6 @@ Router.put("/resetPassowrd", client.resetPassword);
 Router.get("/client/:reference", client.allClientsByProjectReference);
 Router.get("/clientbyid/:id", client.getSingleClient);
 Router.put("/uploadPhotoClient/:id",  upload.single("image"), client.uploadPhotoToClient);
-
-
 Router.post("/login", client.loginclient);
 
 
