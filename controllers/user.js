@@ -1065,7 +1065,9 @@ exports.userData = async (req, res) => {
   if (token !== null ){
   const user = jwt.verify(token, secretOrkey);
   const useremail = user.email;
-  User.findOne({ email: useremail }).populate({path: "myProject", model: Project})
+  const userId = user.id;
+  console.log(user)
+  User.findOne({ _id: userId }).populate({path: "myProject", model: Project})
     .then((data) => {
       res.send({ status: "ok", data: data });
     })

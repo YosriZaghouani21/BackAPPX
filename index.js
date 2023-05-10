@@ -43,11 +43,12 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 
 //Mailing Service jobs
-mailingService
+mailingService;
 //Basic Configuration
 const app = express();
-const port = process.env.PORT || 9092;
+//const port = process.env.PORT || 9092;
 const server = http.createServer(app);
+
 const io = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -164,7 +165,7 @@ io.on("connection", (socket) => {
   });
 });
 
-app.listen(PORT, (err) =>
+server.listen(PORT, (err) =>
   err ? console.log(err) : console.log(` 
 ------------------------------------------------------------------                                      
  _____         _   _____         __ __ 
