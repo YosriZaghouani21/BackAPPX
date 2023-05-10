@@ -101,21 +101,15 @@ router.post("/push", async (req, res) => {
         await exec(`git push -u origin main --force`, { cwd: `./api-generator/api_${user_id}` });
         res.send({message:'Git commands executed successfully!'});
         user = await User.findById(user_id);
-/* 
-        if (user.apiGen == 1){
-            user.apiGen = 3
-            await user.save()
-        }else if (user.apiGen == 2){
-            user.apiGen = 4
-            await user.save()
-        } */
+        user.apiGen = 3
+        await user.save()
 
     } catch (err) {
         console.error(`Error: ${err}`);
         // Remove the .git folder
         fs.rmdirSync(`./api-generator/api_${user_id}/.git`, { recursive: true });
         await User.updateOne({ _id: user_id }, { apiGen: 0 })
-        res.status(500).send('Error executing API commands '+err);
+        res.status(500).send({message:'Error executing API commands '+err});
     }
 });
 
@@ -127,7 +121,7 @@ router.post("/deploy", async (req, res) => {
     try {
         // Check if the api directory exists
         if (!fs.existsSync(`./api-generator/api_${user_id}`)) {
-            res.status(500).send('API directory not found!');
+            res.status(500).send({message:'API directory not found!'});
         }
 
         if (!fs.existsSync(`./api-generator/api_${user_id}/.env`)) {
@@ -152,7 +146,7 @@ router.post("/deploy", async (req, res) => {
     }
     catch (err) {
         console.error(`${err}`);
-        res.status(500).json('Error executing API commands '+err);
+        res.status(500).json({message:'Error executing API commands '+err});
     }
 });
 
@@ -162,11 +156,11 @@ router.post("/restart", async (req, res) => {
     try {
         await exec(`pm2 restart index.js`, {cwd: `./api-generator/api_${user_id}`});
         console.log(`Server for user ${user_id} restarted successfully!`);
-        res.send(`API restarted successfully for user: ${user_id}`);
+        res.send({message:`API restarted successfully for user: ${user_id}`});
     }
     catch (err) {
         console.error(`Error: ${err}`);
-        res.status(500).json('Error executing API commands '+err);
+        res.status(500).json({message:'Error executing API commands '+err});
     }
 });
 
@@ -176,12 +170,12 @@ router.post("/stop", async (req, res) => {
     try {
         await exec(`pm2 stop index.js`, {cwd: `./api-generator/api_${user_id}`});
         console.log(`Server for user ${user_id} stopped successfully!`);
-        res.send(`API stopped successfully for user: ${user_id}`);
+        res.send({message:`API stopped successfully for user: ${user_id}`});
         deallocatePort(user_id);
     }
     catch (err) {
         console.error(`Error: ${err}`);
-        res.status(500).send('Error executing API commands '+err);
+        res.status(500).send({message:'Error executing API commands '+err});
     }
 });
 
@@ -257,11 +251,11 @@ router.post("/stop-all", async (req, res) => {
     try {
         await exec(`pm2 stop all`);
         console.log(`All servers stopped successfully!`);
-        res.send(`All servers stopped successfully!`);
+        res.send({message:`All servers stopped successfully!`});
     }
     catch (err) {
         console.error(`Error: ${err}`);
-        res.status(500).send('Error executing API commands '+err);
+        res.status(500).send({message:'Error executing API commands '+err});
     }
 }
 );

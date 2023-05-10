@@ -15,33 +15,22 @@ const { registerRules, validator } = require("../middlewares/validator.js");
 const isAuth = require("../middlewares/passport-setup.js");
 
 const upload = require("../uploads/multer");
-const {
-    createClient,
-    allClients,
-    allClientsByProjectReference,
-    updateClient,
-    deleteClient,
-    getSingleClient,
-    uploadPhotoToClient,
-    forgotPassword,
-    clientresetPassword,
-    loginclient,
-} = require("../controllers/clientController.js");
+const client = require("../controllers/clientController.js");
 //const isAuth = require("../middleware/passport-setup.js");
 
 const Router = express.Router();
 
-Router.post("/client", createClient);
-Router.get("/client", allClients);
-Router.delete("/client/:id", deleteClient);
-Router.put("/client/:id", updateClient);
-Router.get("/client/:reference", allClientsByProjectReference);
-Router.get("/clientbyid/:id", getSingleClient);
-Router.put("/uploadPhotoClient/:id",  upload.single("image"), uploadPhotoToClient);
-
-Router.put("/clientforgot-password", forgotPassword);
-Router.put("/clientresetpassword", clientresetPassword);
-Router.post("/login", loginclient);
+Router.post("/client", client.createClient);
+Router.get("/client", client.allClients);
+Router.delete("/client/:id", client.deleteClient);
+Router.put("/client/:id", client.updateClient);
+Router.put("/clientresetpassword", client.forgotPassword);
+Router.post("/clientVerifyKey", client.verifyResetCode);
+Router.put("/resetPassowrd", client.resetPassword);
+Router.get("/client/:reference", client.allClientsByProjectReference);
+Router.get("/clientbyid/:id", client.getSingleClient);
+Router.put("/uploadPhotoClient/:id",  upload.single("image"), client.uploadPhotoToClient);
+Router.post("/login", client.loginclient);
 
 
 module.exports = Router;
