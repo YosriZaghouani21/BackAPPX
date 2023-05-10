@@ -7,12 +7,14 @@ const {
     updateCategory,
     deleteCategory,
     addMyProduct,
+    getAllCategoriesByProject,
     allCategories,
     getSingleCategory } = require("../controllers/categoryController");
 
 const uploader = require("../uploads/multer");
 const Router = express.Router();
 
+Router.get("/getAllCategoriesByProject/:projectId", getAllCategoriesByProject);
 Router.post("/category", uploader.single("image"), createCategory);
 Router.put("/category/:id", updateCategory);
 Router.delete("/category/:id", deleteCategory);

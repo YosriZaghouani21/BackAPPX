@@ -69,6 +69,7 @@ exports.getSingleProject = async (req, res) => {
     res.status(200).json({ project });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
+    
   }
 };
 
@@ -119,10 +120,10 @@ exports.getImages = async (req, res) => {
         return { name, sizeInBytes, sizeInKB, type, path: filePath };
       })
     );
-    res.status(200).json({ images });
+    res.status(200).json({ status:"ok",images:images });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to get images" });
+    res.status(500).json({error: "Failed to get images" });
   }
 };
 

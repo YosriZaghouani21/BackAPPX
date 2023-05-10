@@ -4,7 +4,7 @@
   "description": "this package is related to back end of BackAppx project",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "set PORT=9092 && node index.js",
     "dev": "nodemon index.js",
     "build": "webpack --mode production",
     "test": "jest"
@@ -45,6 +45,7 @@
     "passport-github2": "^0.1.12",
     "passport-gitlab2": "^5.0.0",
     "passport-jwt": "^4.0.0",
+    "socket.io": "^4.6.1",
     "stripe": "^11.10.0",
     "supertest": "^6.3.3",
     "swagger-jsdoc": "^6.2.8",
