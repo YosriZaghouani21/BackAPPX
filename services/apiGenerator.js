@@ -136,7 +136,7 @@ router.post("/deploy", async (req, res) => {
         // Start the api server
 
 
-            await exec(`pm2 startOrReload index.js -f`, {cwd: `./api-generator/api_${user_id}`});
+            await exec(`pm2 start index.js -f`, {cwd: `./api-generator/api_${user_id}`});
             res.status(200).json({
                     port: user_port,
                     database: user_database,
