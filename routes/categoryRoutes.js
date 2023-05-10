@@ -21,6 +21,6 @@ Router.delete("/category/:id", deleteCategory);
 Router.put("/addproducttocategory/:id", addMyProduct);
 Router.put("/addCategory/:id", getSingleCategory);
 Router.get("/category/:id", getSingleCategory);
-Router.get("/allCategories", allCategories);
+Router.get("/allCategories/:ref", allCategories);
 
 module.exports = Router;

@@ -79,30 +79,72 @@ exports.getAllProductsByProject = async (req, res) => {
   }
 };
 
-// Update product
+// // Update product
+// exports.updateProduct = async (req, res) => {
+
+//   // No error occurred, so update the product
+//   const { nameEdit, descriptionEdit, priceEdit, referenceEdit, quantityEdit, categoryEdit } = req.body;
+//   console.log(req.file);
+
+//   let imageEdit = null;
+
+//   if (req.file) {
+//     imageEdit = cloudinary.v2.uploader.upload(req.file.path)
+//   }
+
+//   // Check if an image was uploaded and update accordingly
+//   const updateData = { name: nameEdit, description: descriptionEdit, price: priceEdit, reference: referenceEdit, quantity: quantityEdit, category: categoryEdit, image: imageEdit };
+//   Product.findByIdAndUpdate(req.params.id, updateData)
+//     .then((doc2) => {
+//       res.status(200).json(doc2);
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ error: err });
+//     });
+// };
+
 exports.updateProduct = async (req, res) => {
+  try {
+    const { name, description, price, reference, quantity, category, image } = req.body;
+    console.log('Request body:', req.body);
 
-  // No error occurred, so update the product
-  const { nameEdit, descriptionEdit, priceEdit, referenceEdit, quantityEdit, categoryEdit } = req.body;
-  console.log(req.file);
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
+      name,
+      description,
+      price,
+      reference,
+      quantity,
+      category,
+      image
+    }, { new: true });
+    console.log('Updated product:', updatedProduct);
 
-  let imageEdit = null;
-
-  if (req.file) {
-    imageEdit = cloudinary.v2.uploader.upload(req.file.path)
-  }
-
-  // Check if an image was uploaded and update accordingly
-  const updateData = { name: nameEdit, description: descriptionEdit, price: priceEdit, reference: referenceEdit, quantity: quantityEdit, category: categoryEdit, image: imageEdit };
-  Product.findByIdAndUpdate(req.params.id, updateData)
-    .then((doc2) => {
-      res.status(200).json(doc2);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
+    return res.status(200).json({
+      status: "updated",
+      message: "Product has been successfully updated",
+      data: updatedProduct
     });
+  } catch (err) {
+    console.log('Error:', err);
+    return res.status(500).json({ message: err.message });
+  }
 };
 
+exports.uploadPhotoToProduct = async (req, res) => {
+  try {
+    const image = await cloudinary.v2.uploader.upload(req.file.path);
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
+      image:image.secure_url,
+    });
+    res.json({
+      success: true,
+      file: image,
+      product: updatedProduct,
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
 
 
 
