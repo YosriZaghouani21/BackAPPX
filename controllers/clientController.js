@@ -588,6 +588,17 @@ exports.login = async (req, res) => {
   } catch (error) {
     res.status(500).json({ errors: error.message });
   }
+
+};
+exports.logoutclient = async (req, res) => {
+  const { id, reference } = req.body;
+  Session.findOneAndDelete({ userId: req.body.userId }, function (err) {
+    if (err) {
+      return res.status(500).json({ msg: err.message });
+    } else {
+      res.json({ msg: "logged out" });
+    }
+  })
 };
 exports.logoutclient = async (req, res) => {
   const { id, reference } = req.body;
