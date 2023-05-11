@@ -103,9 +103,6 @@ exports.updateProduct = async (req, res) => {
     });
 };
 
-
-
-
 // Get all product by project reference
 exports.allProducts = async (req, res) => {
   Product.find(req.params.reference)
@@ -185,3 +182,5 @@ exports.getSingleProject = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
+
+

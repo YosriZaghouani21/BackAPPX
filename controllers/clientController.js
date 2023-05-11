@@ -1,6 +1,5 @@
 const Client = require("../models/clientModel.js");
 const Session = require("../models/sessionModel.js");
-const Project = require("../models/projectModel.js");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const cloudinary = require("../uploads/cloudinary");
@@ -8,8 +7,6 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const config = require("config");
 const secretOrkey = config.get("secretOrkey");
-const RESET_PWD_KEY = config.get("RESET_PWD_KEY");
-const Client_URL = config.get("Client_URL");
 
 // create client
 exports.createClient = async (req, res) => {
@@ -327,8 +324,6 @@ exports.createClient = async (req, res) => {
   }
 };
 
-
-
 // Update client
 exports.updateClient = async (req, res) => {
   try {
@@ -367,6 +362,7 @@ exports.allClients = async (req, res) => {
    }) 
 };
 
+// Get all clients by project reference
 exports.allClientsByProjectReference = async (req, res) => {
     Client.find({"reference":req.params.reference})
     .then(doc => {
@@ -396,7 +392,6 @@ exports.getSingleClient = async (req, res) => {
   }
 };
 
-
 exports.uploadPhotoToClient = async (req, res) => {
   try {
     const image = await cloudinary.v2.uploader.upload(req.file.path);
@@ -412,8 +407,6 @@ exports.uploadPhotoToClient = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
-
-
 
 exports.forgotPassword = async (req, res) => {
   const user = await Client.findOne({email: req.body.email})
@@ -528,45 +521,7 @@ async function sendEmail(mailOptions) {
   return true
 }
 
-
-exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await Client.findOne({ email });
-    if (!user)
-      return res.status(404).json({status:"email not found", msg: `Email ou mot de passe incorrect` });
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-
-      return res.status(401).json({ status:"password not found", msg: `Email ou mot de passe incorrect` });
-
-      if (!isSubValid(user))
-      return res.status(401).json({ msg: `Votre abonnement a expiré` });
-
-      let lastLogin = user.lastLogin;
-
-      user.lastLogin = new Date();
-      user.save();
-
-
-    const payload = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      image: user.image,
-      githubUsername:user.githubUsername,
-      provider:user.provider,
-      role:user.Role
-    };
-
-    const token = await jwt.sign(payload, secretOrkey);
-    return res.status(200).json({ status:"ok",lastLogin:lastLogin,token:token, user });
-
-  } catch (error) {
-    res.status(500).json({ errors: error.message });
-  }
-};exports.loginclient = async (req, res) => {
+exports.loginclient = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await Client.findOne({ email });
@@ -590,16 +545,8 @@ exports.login = async (req, res) => {
   }
 
 };
-exports.logoutclient = async (req, res) => {
-  const { id, reference } = req.body;
-  Session.findOneAndDelete({ userId: req.body.userId }, function (err) {
-    if (err) {
-      return res.status(500).json({ msg: err.message });
-    } else {
-      res.json({ msg: "logged out" });
-    }
-  })
-};
+
+
 exports.logoutclient = async (req, res) => {
   const { id, reference } = req.body;
   Session.findOneAndDelete({ userId: req.body.userId }, function (err) {
