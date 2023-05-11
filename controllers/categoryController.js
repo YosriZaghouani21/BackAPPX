@@ -28,6 +28,30 @@ exports.createCategory = async (req, res) => {
   }
 };
 
+exports.updateCategory = async (req, res) => {
+  try {
+    const { name, description, reference,image } = req.body;
+    console.log('Request body:', req.body);
+
+    const updateCategory = await Product.findByIdAndUpdate(req.params.id, {
+      name,
+      description,
+      reference,
+      image
+    }, { new: true });
+    console.log('Updated categorie :', updateCategory);
+
+    return res.status(200).json({
+      status: "updated",
+      message: "categorie has been successfully updated",
+      data: updateCategory
+    });
+  } catch (err) {
+    console.log('Error:', err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 exports.getAllCategoriesByProject = async (req, res) => {
   try {
     const { projectId } = req.params;
@@ -41,7 +65,7 @@ exports.getAllCategoriesByProject = async (req, res) => {
   }
 };
 
-// Update Category
+/* // Update Category
 exports.updateCategory = async (req, res) => {
   Category.findByIdAndUpdate(req.params.id, req.body)
     .then((doc2) => {
@@ -50,11 +74,11 @@ exports.updateCategory = async (req, res) => {
     .catch((err) => {
       res.status(500).json({ error: err });
     });
-};
+}; */
 
 // Get all Category by project reference
 exports.allCategories = async (req, res) => {
-  Category.find(req.params.reference)
+  Category.find(req.params.ref)
     .then((docs) => {
       res.status(200).json(docs);
     })

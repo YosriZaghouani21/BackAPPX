@@ -10,6 +10,7 @@ exports.sendEmailConfirmationPayment = async (email) => {
         day: "numeric",
     });
     const user = await User.findOne({ email: email });
+    console.log(user)
     const InvoiceNumber = Math.floor(Math.random() * 1000000000);
 
     let transporter = nodemailer.createTransport({
@@ -188,7 +189,7 @@ border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width
                                                                         <p
                                                                             style="margin: 0; font-size: 14px; text-align: center; mso-line-height-alt: 16.8px;">
                                                                             <span style="font-size:58px;"><strong>Dear
-                                                                                    ${user.name},</strong></span></p>
+                                                                                    User,</strong></span></p>
                                                                     </div>
                                                                 </div>
                                                             </td>
