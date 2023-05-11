@@ -79,6 +79,20 @@ exports.getAllProductsByProject = async (req, res) => {
   }
 };
 
+// Get all products by project reference
+exports.getAllProductsByProjectRefrence = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    // Find all products with the matching project ID
+    const products = await Product.find({ reference: projectId });
+
+    res.status(200).json({ products });
+  } catch (error) {
+    res.status(500).json({ errors: error });
+  }
+};
+
 // Update product
 exports.updateProduct = async (req, res) => {
 

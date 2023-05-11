@@ -327,8 +327,6 @@ exports.createClient = async (req, res) => {
   }
 };
 
-
-
 // Update client
 exports.updateClient = async (req, res) => {
   try {
@@ -396,7 +394,6 @@ exports.getSingleClient = async (req, res) => {
   }
 };
 
-
 exports.uploadPhotoToClient = async (req, res) => {
   try {
     const image = await cloudinary.v2.uploader.upload(req.file.path);
@@ -412,8 +409,6 @@ exports.uploadPhotoToClient = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
-
-
 
 exports.forgotPassword = async (req, res) => {
   const user = await Client.findOne({email: req.body.email})
@@ -528,26 +523,34 @@ async function sendEmail(mailOptions) {
   return true
 }
 
-
 exports.loginclient = async (req, res) => {
-  const { email, password, reference } = req.body;
-  try {
-    const client = await Client.findOne({ email });
+    const { email, password } = req.body;
+    try {
+        const user = await Client.findOne({ email });
+        if (!user)
+            return res.status(404).json({status:"email not found", msg: `Email ou mot de passe incorrect` });
+        const isMatch = (password, user.password);
+        if (password == user.password)
+            return res.status(401).json({ status:"password not found", msg: `Email ou mot de passe incorrect` });
 
+        const payload = {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+        };
 
-    const token = await jwt.sign(payload, secretOrkey);
-    const userId = client._id
-    const newSession = new Session({
-      reference,
-      userId,
-    });
-    await newSession.save();
-    return res.status(200).json({ token: `Bearer ${token}`, client });
-  } catch {
-    return res.status(401).json({ error: "Invalid or missing reset link" });
-  }
+        const token = await jwt.sign(payload, secretOrkey);
+        return res.status(200).json({ status:"ok",
+            token: `Bearer ${token}`,
+            user: payload,
+        });
+
+    } catch (error) {
+        res.status(500).json({ errors: error.message });
+    }
 
 };
+
 exports.logoutclient = async (req, res) => {
   const { id, reference } = req.body;
   Session.findOneAndDelete({ userId: req.body.userId }, function (err) {

@@ -9,9 +9,11 @@ const { updateProduct } = require("../controllers/productController.js");
 const { getAllProductsByProject } = require("../controllers/productController.js");
 
 const uploader = require("../uploads/multer");
+const {getAllProductsByProjectRefrence} = require("../controllers/productController");
 const Router = express.Router();
 
 Router.get("/getAllProductsByProject/:projectId", getAllProductsByProject);
+Router.get("/getAllProductsByProjectRef/:projectId", getAllProductsByProjectRefrence);
 Router.post("/product", uploader.single("image"), createProduct);
 Router.get("/getallproduct", allProducts);
 Router.delete("/product/:id", deleteProduct);
